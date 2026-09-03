@@ -1,0 +1,40 @@
+relationship AutoDetected_4cb930a5-8314-4b39-9c2d-f3b314f5432f
+	fromColumn: ASSET_PERFORMANCE_DAILY_REPORT.PLANT_NAME
+	toColumn: 'Plant Dim'.PLANT_NAME
+
+relationship 5165a375-68f9-230a-64ac-aa782799a64c
+	fromColumn: DAILY_PNL.ENTITY_NAME
+	toColumn: 'Plant Dim'.PLANT_NAME
+
+relationship 349004d6-6924-82a6-2125-0fa1ac9a2a63
+	toCardinality: many
+	fromColumn: DAILY_PNL.CALENDAR_DATE
+	toColumn: ASSET_PERFORMANCE_DAILY_REPORT.CALENDAR_DATE
+
+relationship 4603a768-6ca2-1101-af59-fc9226a01572
+	fromColumn: DAILY_PNL_PER_HOUR.ENTITY_NAME
+	toColumn: 'Plant Dim'.PLANT_NAME
+
+relationship 02c2dc4a-c282-1226-2612-31866349255a
+	toCardinality: many
+	fromColumn: DAILY_PNL_PER_HOUR.CALENDAR_DATE
+	toColumn: ASSET_PERFORMANCE_DAILY_REPORT.CALENDAR_DATE
+
+relationship AutoDetected_1427a5d0-eeb1-4e4f-ac42-f07ffe9ef499
+	fromColumn: PEAKING_PLANTS_PROFILES.PLANT_NAME
+	toColumn: 'Plant Dim'.PLANT_NAME
+
+relationship 628e074e-06c9-54a7-c222-919ec5db72d3
+	toCardinality: many
+	fromColumn: PEAKING_PLANTS_PROFILES.CALENDAR_DATE
+	toColumn: ASSET_PERFORMANCE_DAILY_REPORT.CALENDAR_DATE
+
+relationship 8b2b4f0d-03f5-5f94-d9db-097af9ba8a38
+	toCardinality: many
+	fromColumn: 'AI Remarks'.CALENDAR_DATE
+	toColumn: ASSET_PERFORMANCE_DAILY_REPORT.CALENDAR_DATE
+
+relationship AutoDetected_3afa0043-7d46-40e4-994e-c0fdb17bd463
+	fromColumn: 'AI Remarks'.RESOURCE_NAME
+	toColumn: 'RESOURCE NAME'.'Resource Name'
+

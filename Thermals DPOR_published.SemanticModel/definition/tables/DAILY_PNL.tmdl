@@ -1,0 +1,457 @@
+table DAILY_PNL
+	lineageTag: 4a66d709-1dc3-408e-a620-375ea5ec47ef
+
+	measure YTD_QUANTITY =
+			
+			TOTALYTD (
+			    SUM ( 'DAILY_PNL'[QUANTITY]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		formatString: #,0
+		lineageTag: 5d98bbe3-d30b-467c-9c91-9a3f4e2e8602
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure MTD_QUANTITY_RUNNING =
+			
+			VAR SelectedDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    CALCULATE(
+			        MIN('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        FILTER(
+			            ALL('ASSET_PERFORMANCE_DAILY_REPORT'),
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[FISCAL_MONTH] =
+			                MAX('ASSET_PERFORMANCE_DAILY_REPORT'[FISCAL_MONTH])
+			        )
+			    )
+			RETURN
+			CALCULATE(
+			    SUM('DAILY_PNL'[QUANTITY]),
+			    DATESBETWEEN(
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE],
+			        FiscalMonthStart,
+			        SelectedDate
+			    )
+			)
+		formatString: #,0
+		lineageTag: 7701c23d-a484-4ef1-8ce3-8cc6358f5ae2
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure MTD_QUANTITY_CHART =
+			
+			TOTALMTD (
+			    SUM ( 'DAILY_PNL'[QUANTITY]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		lineageTag: 5cfc049e-1668-4051-983e-81e5d4baa460
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CF_Daily =
+			
+			DIVIDE (
+			    SUM ( 'DAILY_PNL'[QUANTITY] ),
+			    SELECTEDVALUE ( 'ASSET_PERFORMANCE_DAILY_REPORT'[CAPACITY] ) * 24
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: be707feb-85c3-49ba-b4d8-09f7ca88311e
+
+	measure MTD_CF_Fiscal =
+			
+			VAR SelectedDate =
+			    MAX ( 'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE] )
+			VAR CurrentPlant =
+			    SELECTEDVALUE ( 'ASSET_PERFORMANCE_DAILY_REPORT'[PLANT_NAME] )
+			VAR FiscalMonth =
+			    CALCULATE (
+			        MAX ( 'ASSET_PERFORMANCE_DAILY_REPORT'[FISCAL_MONTH] ),
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE] = SelectedDate
+			    )
+			VAR FiscalMonthDates =
+			    FILTER (
+			        ALL ( 'ASSET_PERFORMANCE_DAILY_REPORT' ),
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[FISCAL_MONTH] = FiscalMonth &&
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[PLANT_NAME] = CurrentPlant &&
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE] <= SelectedDate
+			    )
+			RETURN
+			AVERAGEX (
+			    FiscalMonthDates,
+			    VAR DailyGen =
+			        CALCULATE (
+			            SUM ( 'DAILY_PNL'[QUANTITY] ),
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			        )
+			    VAR Capacity =
+			        CALCULATE (
+			            MAX ( 'ASSET_PERFORMANCE_DAILY_REPORT'[CAPACITY] ),
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			        )
+			    RETURN DIVIDE ( DailyGen, Capacity * 24 )
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 4ca9f3b6-c08b-42a7-bff4-60faeff4a852
+
+	measure MTD_CF_100 = 1-[MTD_CF_Fiscal]
+		lineageTag: bad89cf1-b276-4b0a-ab87-2cc4752b8e50
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure YTD_CF_Avg_Fiscal =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalYearStart =
+			    IF(
+			        MONTH(CurrentDate) > 1 || (MONTH(CurrentDate) = 1 && DAY(CurrentDate) >= 26),
+			        DATE(YEAR(CurrentDate), 1, 26),
+			        DATE(YEAR(CurrentDate) - 1, 1, 26)
+			    )
+			VAR FiscalDates =
+			    FILTER(
+			        ALL('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE] >= FiscalYearStart &&
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE] <= CurrentDate
+			    )
+			RETURN
+			AVERAGEX(
+			    FiscalDates,
+			    CALCULATE([CF_Daily])
+			)
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 2e6d826a-5de0-4230-b436-2f5c46110a22
+
+	measure YTD_GEN =
+			
+			TOTALYTD(
+			    SUM('DAILY_PNL'[QUANTITY]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		formatString: #,0
+		lineageTag: 057ecd71-158c-41b0-abd6-27c8faad968c
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure INITIAL_MTD_QUANTITY =
+			
+			TOTALMTD (
+			    SUM ( 'DAILY_PNL'[QUANTITY]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		lineageTag: 1d511530-c176-4bbf-944f-7cffd136d532
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure YTD_GEN_LABEL =
+			
+			FORMAT(
+			    [YTD_GEN],
+			    "0,00"
+			) & " MWh"
+		lineageTag: 0fc03bb7-cb57-4dec-a240-58612c22ea74
+
+	measure MTD_GEN_LABEL =
+			
+			FORMAT(
+			    [MTD_QUANTITY_RUNNING],
+			    "0"
+			) & " MWh"
+		lineageTag: 6101553f-2705-474b-8c64-e4bfb53b3aa5
+
+	measure DAY_GEN =
+			
+			FORMAT(
+			    SUM('DAILY_PNL'[QUANTITY]),
+			    "00"
+			) & " MWh"
+		lineageTag: ef4bc413-32d9-43fe-9219-d04bafcb937e
+
+	measure RM_RATE =
+			
+			DIVIDE(
+			    SUMX('DAILY_PNL', 'DAILY_PNL'[QUANTITY] * 'DAILY_PNL'[RATE]),
+			    SUM('DAILY_PNL'[QUANTITY])
+			)/ 1000
+		formatString: "₱"#,0.00;-"₱"#,0.00;"₱"#,0.00
+		lineageTag: 468d0f60-c703-412d-8392-b043fa884247
+
+		annotation PBI_FormatHint = {"currencyCulture":"ceb-Latn-PH"}
+
+	measure RM_RATE_MTD =
+			
+			VAR CurrentDate = MAX('DAILY_PNL'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('DAILY_PNL'),
+			        'DAILY_PNL'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'DAILY_PNL'[CALENDAR_DATE] <= CurrentDate
+			    )
+			VAR WeightedSum =
+			    SUMX(FilteredTable, 'DAILY_PNL'[QUANTITY] * 'DAILY_PNL'[RATE])
+			VAR TotalQuantity =
+			    SUMX(FilteredTable, 'DAILY_PNL'[QUANTITY])
+			RETURN
+			DIVIDE(WeightedSum, TotalQuantity) / 1000
+		formatString: "₱"#,0.00;-"₱"#,0.00;"₱"#,0.00
+		lineageTag: 6ee08146-97da-4671-9fe8-5577a9b8d6de
+
+		annotation PBI_FormatHint = {"currencyCulture":"ceb-Latn-PH"}
+
+	measure RM_RATE_YTD =
+			
+			DIVIDE(
+			    CALCULATE(
+			        SUMX(
+			            'DAILY_PNL',
+			            'DAILY_PNL'[QUANTITY] * 'DAILY_PNL'[RATE]
+			        ),
+			        DATESYTD(ASSET_PERFORMANCE_DAILY_REPORT[CALENDAR_DATE])  -- Replace with your actual date column
+			    ),
+			    CALCULATE(
+			        SUM('DAILY_PNL'[QUANTITY]),
+			        DATESYTD('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])  -- Same date column
+			    )
+			) / 1000
+		formatString: "₱"#,0.00;-"₱"#,0.00;"₱"#,0.00
+		lineageTag: 1749c042-ea5f-4b39-8e63-b38c3748525e
+
+		annotation PBI_FormatHint = {"currencyCulture":"ceb-Latn-PH"}
+
+	column BILLING_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 4a8b9daf-5ade-418e-b727-2985ba870054
+		summarizeBy: none
+		sourceColumn: BILLING_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column CONTRACT_NAME
+		dataType: string
+		lineageTag: c1bfb98d-aacd-4a07-a556-01e424b5c4fd
+		summarizeBy: none
+		sourceColumn: CONTRACT_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column LINE_ITEM_SUB_LABEL
+		dataType: string
+		lineageTag: 812707ba-e040-42cb-8431-04cedfc4a4ae
+		summarizeBy: none
+		sourceColumn: LINE_ITEM_SUB_LABEL
+
+		annotation SummarizationSetBy = Automatic
+
+	column TIME_INTERVAL
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 213601d3-b434-4864-a049-b669cf6d3cde
+		summarizeBy: none
+		sourceColumn: TIME_INTERVAL
+
+		annotation SummarizationSetBy = Automatic
+
+	column CALENDAR_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: b1f15e2f-c5e0-4e92-a8b4-e6b50d0fa736
+		summarizeBy: none
+		sourceColumn: CALENDAR_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column PUBLICATION
+		dataType: string
+		lineageTag: a7e6ba47-9220-4ace-89b5-7aafc881ac95
+		summarizeBy: none
+		sourceColumn: PUBLICATION
+
+		annotation SummarizationSetBy = Automatic
+
+	column QUANTITY_TYPE
+		dataType: string
+		lineageTag: ad6b232a-d740-41a6-921d-d0b6a80c52ea
+		summarizeBy: none
+		sourceColumn: QUANTITY_TYPE
+
+		annotation SummarizationSetBy = Automatic
+
+	column QUANTITY
+		dataType: double
+		formatString: #,0
+		lineageTag: 9aacca69-e327-4ad3-a6a3-fb6dc21edb4c
+		summarizeBy: sum
+		sourceColumn: QUANTITY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column SIGN
+		dataType: double
+		lineageTag: 371bb45c-177b-4c86-9525-27ed215d9219
+		summarizeBy: sum
+		sourceColumn: SIGN
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RATE
+		dataType: int64
+		formatString: \$#,0.###############;(\$#,0.###############);\$#,0.###############
+		lineageTag: c88a269c-97f6-4484-bdcd-bfef519e9cfc
+		summarizeBy: sum
+		sourceColumn: RATE
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+	column GROSS_PROFIT
+		dataType: double
+		lineageTag: e93a47de-b754-4d40-aec2-13d249195ad7
+		summarizeBy: sum
+		sourceColumn: GROSS_PROFIT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column LINE_ITEM_LABEL
+		dataType: string
+		lineageTag: 3cdf0205-33a0-4890-a349-62427069bedd
+		summarizeBy: none
+		sourceColumn: LINE_ITEM_LABEL
+
+		annotation SummarizationSetBy = Automatic
+
+	column ACE_GROUP
+		dataType: string
+		lineageTag: 63ef95e8-b96c-4952-b7ea-567230d7bc1e
+		summarizeBy: none
+		sourceColumn: ACE_GROUP
+
+		annotation SummarizationSetBy = Automatic
+
+	column CATEGORY_LEVEL_1
+		dataType: string
+		lineageTag: ad8e085c-4b10-4706-9e35-f920ffc1d61b
+		summarizeBy: none
+		sourceColumn: CATEGORY_LEVEL_1
+
+		annotation SummarizationSetBy = Automatic
+
+	column CATEGORY_LEVEL_2
+		dataType: string
+		lineageTag: f4d7f4b0-fff3-4c90-a9df-6fabca6fea52
+		summarizeBy: none
+		sourceColumn: CATEGORY_LEVEL_2
+
+		annotation SummarizationSetBy = Automatic
+
+	column CATEGORY_LEVEL_3
+		dataType: string
+		lineageTag: a6d3b834-1a66-4874-8ce8-c979727ad9ba
+		summarizeBy: none
+		sourceColumn: CATEGORY_LEVEL_3
+
+		annotation SummarizationSetBy = Automatic
+
+	column ENTITY_NAME
+		dataType: string
+		lineageTag: d8e17dc6-a3f6-4d13-9556-123f3b40cf34
+		summarizeBy: none
+		sourceColumn: ENTITY_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column DAILY_PNL_UNIQUE_KEY
+		dataType: double
+		lineageTag: 1c1f23d9-8f94-45aa-8961-b78e7cd93b08
+		summarizeBy: sum
+		sourceColumn: DAILY_PNL_UNIQUE_KEY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DAY_OF_MONTH =
+			
+			DAY ( 'DAILY_PNL'[CALENDAR_DATE])
+		formatString: 0
+		lineageTag: e334ce9d-693f-466b-b176-044b0c580c54
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column _X_AXIS_DAY_OF_MONTH =
+			
+			DAY ( 'DAILY_PNL'[CALENDAR_DATE] )
+		formatString: 0
+		lineageTag: 19fc1f64-3ea4-4eeb-bf2c-e906ae82f093
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column MONTH_OF_YEAR =
+			
+			FORMAT('DAILY_PNL'[CALENDAR_DATE], "MMM")
+		lineageTag: 63fa4528-d859-4bc6-89e7-ccd3232ddfb6
+		summarizeBy: none
+		sortByColumn: MONTH_NUMBER
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column MONTH_NUMBER = MONTH('DAILY_PNL'[CALENDAR_DATE])
+		formatString: 0
+		lineageTag: dd5f2a24-72aa-49d2-a4d7-7565749dc33c
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column INITIAL_DAY_OF_MONTH =
+			
+			DAY ( 'DAILY_PNL'[CALENDAR_DATE])
+		formatString: 0
+		lineageTag: 13b8e78a-1b0b-4bb4-974d-3003be8ad479
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rate_kwh = DIVIDE('DAILY_PNL'[RATE], 1000)
+		lineageTag: f206c839-385a-4cbd-9efb-af684a497bb4
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition DAILY_PNL = m
+		mode: import
+		source =
+				let
+				    Source = Snowflake.Databases("ayala-acen.snowflakecomputing.com","ACEN_XS_WH",[Implementation="2.0"]),
+				    COMOPS_Database = Source{[Name="COMOPS",Kind="Database"]}[Data],
+				    PNL_DAILY_Schema = COMOPS_Database{[Name="PNL_DAILY",Kind="Schema"]}[Data],
+				    DAILY_PNL_View = PNL_DAILY_Schema{[Name="DAILY_PNL",Kind="View"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(DAILY_PNL_View, each ([LINE_ITEM_SUB_LABEL] = "ASPA TRADING" or [LINE_ITEM_SUB_LABEL] = "RESERVE TRADING" or [LINE_ITEM_SUB_LABEL] = "WESM TRADING") and ([CONTRACT_NAME] = "BPGC-001" or [CONTRACT_NAME] = "CIP2-001" or [CONTRACT_NAME] = "INGRID1-001" or [CONTRACT_NAME] = "INGRID2-001" or [CONTRACT_NAME] = "INGRID3-001" or [CONTRACT_NAME] = "INGRID4-001" or [CONTRACT_NAME] = "INGRID5-001" or [CONTRACT_NAME] = "INGRID6-001" or [CONTRACT_NAME] = "OSPGC-001"))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

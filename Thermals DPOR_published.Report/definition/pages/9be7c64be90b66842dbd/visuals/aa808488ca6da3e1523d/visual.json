@@ -1,0 +1,171 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.12.0/schema.json",
+  "name": "aa808488ca6da3e1523d",
+  "position": {
+    "x": 32,
+    "y": 16,
+    "z": 0,
+    "height": 688,
+    "width": 1168,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "hundredPercentStackedAreaChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                    }
+                  },
+                  "Property": "CALENDAR_DATE"
+                }
+              },
+              "queryRef": "ASSET_PERFORMANCE_DAILY_REPORT.CALENDAR_DATE",
+              "nativeQueryRef": "CALENDAR_DATE",
+              "active": true
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Aggregation": {
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                        }
+                      },
+                      "Property": "DAILY_GENERATION"
+                    }
+                  },
+                  "Function": 0
+                }
+              },
+              "queryRef": "Sum(ASSET_PERFORMANCE_DAILY_REPORT.DAILY_GENERATION)",
+              "nativeQueryRef": "Sum of DAILY_GENERATION"
+            }
+          ]
+        }
+      },
+      "sortDefinition": {
+        "sort": [
+          {
+            "field": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                  }
+                },
+                "Property": "CALENDAR_DATE"
+              }
+            },
+            "direction": "Ascending"
+          }
+        ],
+        "isDefaultSort": true
+      }
+    },
+    "drillFilterOtherVisuals": true
+  },
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "0a1269ee6f9d065813ca",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+              }
+            },
+            "Property": "CALENDAR_DATE"
+          }
+        },
+        "type": "Categorical"
+      },
+      {
+        "name": "3f576498bd8232ee9d93",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Plant Dim"
+              }
+            },
+            "Property": "PLANT_NAME"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "p",
+              "Entity": "Plant Dim",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "p"
+                          }
+                        },
+                        "Property": "PLANT_NAME"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'BPGC'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User"
+      },
+      {
+        "name": "cf7e9a71dbdbe2f8db38",
+        "field": {
+          "Aggregation": {
+            "Expression": {
+              "Column": {
+                "Expression": {
+                  "SourceRef": {
+                    "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                  }
+                },
+                "Property": "DAILY_GENERATION"
+              }
+            },
+            "Function": 0
+          }
+        },
+        "type": "Advanced"
+      }
+    ]
+  }
+}

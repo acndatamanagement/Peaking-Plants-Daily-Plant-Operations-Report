@@ -1,0 +1,312 @@
+table DAILY_PNL_PER_HOUR
+	lineageTag: cbbcf6e0-e724-4082-9d20-beb3364c19a8
+
+	measure Rate_kwh = DIVIDE('DAILY_PNL'[RATE], 1000)
+		lineageTag: c82416ad-6c1e-4015-b957-2b463329715a
+
+	measure YTD_Weighted_fuel_Rate_Fiscal = ```
+			
+			-- 1. Captures the date from your slicer or the page-level "Today-2" filter
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Dec 26 start point for the YTD cycle
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        -- 3. Final weighted calculation (Sum of Cost / Sum of Qty)
+			        DIVIDE(
+			            SUMX('DAILY_PNL_PER_HOUR', 'DAILY_PNL_PER_HOUR'[QUANTITY] * 'DAILY_PNL_PER_HOUR'[RATE]),
+			            SUM('DAILY_PNL_PER_HOUR'[QUANTITY]),
+			            0
+			        ) / 1000,
+			        -- 4. CRITICAL: Bypass the page-level "is_today_minus_2" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 5. Clear the date restriction so the range can expand back to Dec 26
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 6. Apply the Fiscal Year-to-Date range
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    ) + 0
+			```
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: 6b81bb8a-f9a6-4d8b-a155-4ce352f80256
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'Fuel Rate MTD' =
+			
+			VAR CurrentDate = MAX('DAILY_PNL_PER_HOUR'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('DAILY_PNL_PER_HOUR'),
+			        'DAILY_PNL_PER_HOUR'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'DAILY_PNL_PER_HOUR'[CALENDAR_DATE] <= CurrentDate
+			    )
+			VAR WeightedSum =
+			    SUMX(FilteredTable, 'DAILY_PNL_PER_HOUR'[QUANTITY] * 'DAILY_PNL_PER_HOUR'[RATE])
+			VAR TotalQuantity =
+			    SUMX(FilteredTable, 'DAILY_PNL_PER_HOUR'[QUANTITY])
+			RETURN
+			DIVIDE(WeightedSum, TotalQuantity) / 1000 + 0
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: d98ab954-7860-4887-aeb1-aa7f5bdf56d9
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure DAILY_FUEL_RATE =
+			
+			DIVIDE(
+			    SUMX('DAILY_PNL_PER_HOUR', 'DAILY_PNL_PER_HOUR'[QUANTITY] * 'DAILY_PNL_PER_HOUR'[RATE]),
+			    SUM('DAILY_PNL_PER_HOUR'[QUANTITY])
+			)/ 1000 + 0
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: ac8b010e-e557-488b-b540-0c31f1296df7
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	column TIME_INTERVAL
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 5b8551d3-aed2-4ef0-9204-9267dbdf7b66
+		summarizeBy: none
+		sourceColumn: TIME_INTERVAL
+
+		annotation SummarizationSetBy = Automatic
+
+	column HOUR
+		dataType: int64
+		formatString: 0
+		lineageTag: c25d8c8e-30df-4639-9178-efc0fe0aa875
+		summarizeBy: sum
+		sourceColumn: HOUR
+
+		changedProperty = DataType
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	column CALENDAR_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 62332836-4ac8-47d3-8f35-95b26fa28734
+		summarizeBy: none
+		sourceColumn: CALENDAR_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column BILLING_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 6b7446c9-9c7f-4a57-9a84-0ff6371c7b3c
+		summarizeBy: none
+		sourceColumn: BILLING_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column CONTRACT_NAME
+		dataType: string
+		lineageTag: ba748b45-186f-4328-afb0-13617a39b57b
+		summarizeBy: none
+		sourceColumn: CONTRACT_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column ENTITY_NAME
+		dataType: string
+		lineageTag: e1f2b695-622a-4145-baa9-97c6c1dbaeb6
+		summarizeBy: none
+		sourceColumn: ENTITY_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column CATEGORY_LEVEL_3
+		dataType: string
+		lineageTag: d665a522-fcca-4b94-8d98-818d6dce956c
+		summarizeBy: none
+		sourceColumn: CATEGORY_LEVEL_3
+
+		annotation SummarizationSetBy = Automatic
+
+	column CATEGORY_LEVEL_2
+		dataType: string
+		lineageTag: dfa2b077-845e-45de-a75b-8a8e7c165b71
+		summarizeBy: none
+		sourceColumn: CATEGORY_LEVEL_2
+
+		annotation SummarizationSetBy = Automatic
+
+	column CATEGORY_LEVEL_1
+		dataType: string
+		lineageTag: ebd40810-ea93-4cc5-a17e-6433564be55a
+		summarizeBy: none
+		sourceColumn: CATEGORY_LEVEL_1
+
+		annotation SummarizationSetBy = Automatic
+
+	column ACE_GROUP
+		dataType: string
+		lineageTag: 10d324a5-b78e-4cd1-a658-839ee79116e7
+		summarizeBy: none
+		sourceColumn: ACE_GROUP
+
+		annotation SummarizationSetBy = Automatic
+
+	column PUBLICATION
+		dataType: string
+		lineageTag: c8f0b908-9aa3-4a76-87e1-eaf9d65ae2f8
+		summarizeBy: none
+		sourceColumn: PUBLICATION
+
+		annotation SummarizationSetBy = Automatic
+
+	column LINE_ITEM_LABEL
+		dataType: string
+		lineageTag: bcf253e3-da67-453d-a276-fde311f3b708
+		summarizeBy: none
+		sourceColumn: LINE_ITEM_LABEL
+
+		annotation SummarizationSetBy = Automatic
+
+	column LINE_ITEM_SUB_LABEL
+		dataType: string
+		lineageTag: 349a1514-9e5e-4ec5-a5a5-979d2c380bc1
+		summarizeBy: none
+		sourceColumn: LINE_ITEM_SUB_LABEL
+
+		annotation SummarizationSetBy = Automatic
+
+	column QUANTITY_TYPE
+		dataType: string
+		lineageTag: 4191214d-3f6a-4ec6-8452-5634e7f58950
+		summarizeBy: none
+		sourceColumn: QUANTITY_TYPE
+
+		annotation SummarizationSetBy = Automatic
+
+	column SIGN
+		dataType: double
+		lineageTag: f24d9d92-1f13-4940-bb5c-e052912b48b8
+		summarizeBy: sum
+		sourceColumn: SIGN
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column START_TIME_INTERVAL
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: 677818c1-e9e4-4283-a936-c76b2ea1cd32
+		summarizeBy: none
+		sourceColumn: START_TIME_INTERVAL
+
+		annotation SummarizationSetBy = Automatic
+
+	column END_TIME_INTERVAL
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: f9a77e53-38eb-4cdb-a4b0-62f473127f52
+		summarizeBy: none
+		sourceColumn: END_TIME_INTERVAL
+
+		annotation SummarizationSetBy = Automatic
+
+	column NOTES
+		dataType: string
+		lineageTag: 186d92ea-c3e4-4c43-b772-23c0fabb234b
+		summarizeBy: none
+		sourceColumn: NOTES
+
+		annotation SummarizationSetBy = Automatic
+
+	column QUANTITY
+		dataType: double
+		lineageTag: f65b14a9-742a-4d94-bcc5-5d447a953726
+		summarizeBy: sum
+		sourceColumn: QUANTITY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RATE
+		dataType: double
+		lineageTag: c185388f-be53-4551-998e-1ccc4be3ccd3
+		summarizeBy: sum
+		sourceColumn: RATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column GROSS_PROFIT
+		dataType: double
+		lineageTag: 434e2882-974a-4708-9f9e-2870eb537297
+		summarizeBy: sum
+		sourceColumn: GROSS_PROFIT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DAILY_PNL_UNIQUE_KEY
+		dataType: double
+		lineageTag: 6536814f-dcad-4cca-9bd1-7a39720a6ca4
+		summarizeBy: sum
+		sourceColumn: DAILY_PNL_UNIQUE_KEY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Rate_kwh_php = ```
+			
+			DIVIDE(
+			    AVERAGE('DAILY_PNL_PER_HOUR'[RATE]),
+			    1000
+			)
+			
+			```
+		lineageTag: 09606602-37f7-4219-869b-6527d67ad8ee
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition DAILY_PNL_PER_HOUR = m
+		mode: import
+		source =
+				let
+				    Source = Snowflake.Databases("ayala-acen.snowflakecomputing.com","ACEN_XS_WH",[Implementation="2.0"]),
+				    COMOPS_Database = Source{[Name="COMOPS",Kind="Database"]}[Data],
+				    PNL_DAILY_Schema = COMOPS_Database{[Name="PNL_DAILY",Kind="Schema"]}[Data],
+				    DAILY_PNL_PER_HOUR_Table = PNL_DAILY_Schema{[Name="DAILY_PNL_PER_HOUR",Kind="Table"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(DAILY_PNL_PER_HOUR_Table, each ([ENTITY_NAME] = "BPGC" or [ENTITY_NAME] = "CIP2" or [ENTITY_NAME] = "INGRID1" or [ENTITY_NAME] = "INGRID2" or [ENTITY_NAME] = "INGRID3" or [ENTITY_NAME] = "INGRID4" or [ENTITY_NAME] = "INGRID5" or [ENTITY_NAME] = "INGRID6" or [ENTITY_NAME] = "OSPGC"))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

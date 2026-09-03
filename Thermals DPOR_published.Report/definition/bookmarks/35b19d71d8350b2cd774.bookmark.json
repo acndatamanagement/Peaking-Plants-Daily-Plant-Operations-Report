@@ -1,0 +1,2677 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/bookmark/2.1.0/schema.json",
+  "displayName": "Bookmark 2",
+  "name": "35b19d71d8350b2cd774",
+  "options": {
+    "targetVisualNames": []
+  },
+  "explorationState": {
+    "version": "1.3",
+    "activeSection": "b00f96b0c480e2e89fc4",
+    "sections": {
+      "b00f96b0c480e2e89fc4": {
+        "visualContainers": {
+          "9c5f6de7f0e8d04a68f0": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "29f9c3b4c060ad521288",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                            }
+                          },
+                          "Property": "DAILY_AVAILABILITY"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                            }
+                          },
+                          "Property": "DAILY_AVAILABILITY"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "db46c26dbdb3287b4f57": {
+            "singleVisual": {
+              "visualType": "textbox",
+              "objects": {}
+            }
+          },
+          "fc9cee2b3437eb6707af": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "545658678bd0aec59229",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "PEAKING_PLANTS_PROFILES"
+                            }
+                          },
+                          "Property": "STANDBY_CAPACITY"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "07bc5fe6d370ed030148",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "PEAKING_PLANTS_PROFILES"
+                            }
+                          },
+                          "Property": "ASPA_SCHED"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "731e12885c85a045d3c6",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "PEAKING_PLANTS_PROFILES"
+                            }
+                          },
+                          "Property": "RM_SCHED"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "7f3681ab56631de50e1e",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "PEAKING_PLANTS_PROFILES"
+                            }
+                          },
+                          "Property": "OUTAGE_CAPACITY"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "0a87d6adab1aad040ec1",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "PEAKING_PLANTS_PROFILES"
+                            }
+                          },
+                          "Property": "WESM_DISPATCH"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "donutChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "PEAKING_PLANTS_PROFILES"
+                            }
+                          },
+                          "Property": "STANDBY_CAPACITY"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "2d0ec890a860a0041763": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "0dac3798981c950b331b",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "Hour"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "1a1ad8d6411e885c9396",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "PEAKING_PLANTS_PROFILES"
+                            }
+                          },
+                          "Property": "RM_SCHED"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "26fa6e47781c216164c3",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "PEAKING_PLANTS_PROFILES"
+                            }
+                          },
+                          "Property": "STANDBY_CAPACITY"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "4e467e3980c08b910510",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "PEAKING_PLANTS_PROFILES"
+                            }
+                          },
+                          "Property": "ASPA_SCHED"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "ed23efec2e0e4d7a083d",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "PEAKING_PLANTS_PROFILES"
+                            }
+                          },
+                          "Property": "OUTAGE_CAPACITY"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "18f6ba0501027c3eb2ac",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "PEAKING_PLANTS_PROFILES"
+                            }
+                          },
+                          "Property": "WESM_DISPATCH"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "hundredPercentStackedColumnChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 1,
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "Hour"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "Hour"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "356e2ba7bc25327b1532": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "83b86748a7a9861b205c",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                            }
+                          },
+                          "Property": "DAILY_GENERATION"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                            }
+                          },
+                          "Property": "DAILY_GENERATION"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "850f3215aee8e31a33f0": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "894baa151f4b4c4d1ee0",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "QUANTITY_TYPE"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'ASPA SCHEDULE'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "QUANTITY_TYPE"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "de189c35d124ef9915b6",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "LINE_ITEM_SUB_LABEL"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'ASPA TRADING'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "LINE_ITEM_SUB_LABEL"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "1dd7b68ded2ccdb8e496",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "3875fb54c5d692fe5afa": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "cad4bede90bc774e9138",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "QUANTITY_TYPE"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'MQ'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "QUANTITY_TYPE"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "320e5c4aceda20f9c688",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "LINE_ITEM_SUB_LABEL"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'WESM TRADING'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "LINE_ITEM_SUB_LABEL"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "71497c41b3ea8b7367a6",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "7567f5aa6890b27f8854": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "4e1544c7edede4ce4d94",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "QUANTITY_TYPE"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'FR QUANTITY'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'RD QUANTITY'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'RU QUANTITY'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'DR QUANTITY'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "QUANTITY_TYPE"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "e765b5900bbceaec0eda",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "b2127fcb9ea2056c5cec": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "efda7c15cb1ea8f11109",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL_PER_HOUR",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "LINE_ITEM_SUB_LABEL"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'FUEL COST'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL_PER_HOUR"
+                        }
+                      },
+                      "Property": "LINE_ITEM_SUB_LABEL"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "aa1ec3af05514219be3b",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL_PER_HOUR"
+                        }
+                      },
+                      "Property": "DAILY_FUEL_RATE"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL_PER_HOUR"
+                        }
+                      },
+                      "Property": "DAILY_FUEL_RATE"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "ae9b3ef73afd254e8da0": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "ab1dc204bc28b4027504",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "MTD_ASPA_W/O_DISPATCH"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "136333697dc1596841c6",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "STANDBY_MTD"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "f955dd39b57b6b368420",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "MTD_WESM_DISPATCH"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "768d6e69656cd60ebc0d",
+                  "type": "Advanced",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "INITIAL_DAY"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "78a97e70e6018109cc01",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "MTD_RM"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "8d17ac50b469b5d04ad4",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "MTD_OUTAGE"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "hundredPercentStackedColumnChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "MTD_ASPA_W/O_DISPATCH"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "INITIAL_DAY"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "1fb600cf10d767048a95": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "3d2ddec5a840395d8946",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                            }
+                          },
+                          "Property": "MTD_AVAILABILITY"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                            }
+                          },
+                          "Property": "MTD_AVAILABILITY"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "bd5cd7f857ca2e671f18": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "0fdb31c1c7d6eb5ecc9c",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                            }
+                          },
+                          "Property": "MTD_GENERATION"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                            }
+                          },
+                          "Property": "MTD_GENERATION"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "2e6a9d91999b74109946": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "ec5b05c66e210d6b3eed",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "QUANTITY_TYPE"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'ASPA SCHEDULE'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "QUANTITY_TYPE"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "f9fa66ad25b0924d6a11",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE_MTD"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE_MTD"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "f851c3c686e51480ba3a": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "56b737952ef6af4cfd29",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "QUANTITY_TYPE"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'MQ'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "QUANTITY_TYPE"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "b69e17e367d13c926fed",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "LINE_ITEM_SUB_LABEL"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'WESM TRADING'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "LINE_ITEM_SUB_LABEL"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "74f229c15c110d2d69e6",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE_MTD"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE_MTD"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "29b9dce0d6ac3ece7c69": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "a98ca8277b1d849d3e87",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "QUANTITY_TYPE"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'DR QUANTITY'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'FR QUANTITY'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'RD QUANTITY'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'RU QUANTITY'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "QUANTITY_TYPE"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "6f586765289644ccea6d",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE_MTD"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE_MTD"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "e2949dd6123067eda6b7": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "1a3930680c811bc06880",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL_PER_HOUR"
+                        }
+                      },
+                      "Property": "Fuel Rate MTD"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "e5681973a3c766809401",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL_PER_HOUR",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "LINE_ITEM_SUB_LABEL"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'FUEL COST'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL_PER_HOUR"
+                        }
+                      },
+                      "Property": "LINE_ITEM_SUB_LABEL"
+                    }
+                  },
+                  "howCreated": 1
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL_PER_HOUR"
+                        }
+                      },
+                      "Property": "Fuel Rate MTD"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "9e9abc40113ee9b8f644": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "101c4816270aabcb3582",
+                  "type": "Categorical",
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "INITIAL_MONTH"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "3d21f23ec0038178b55a",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "YTD_ASPA"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "a0e91be039772c4b5057",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "YTD_RM"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "b152fd857040a02a212d",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "YTD_WESM"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "067dcb740c7250292073",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "YTD_STANDBY"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "c1994b463b1706450c6b",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "YTD_OUTAGE"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "hundredPercentStackedColumnChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 1,
+                  "Expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "INITIAL_MONTH"
+                    }
+                  }
+                }
+              ],
+              "activeProjections": {
+                "Category": [
+                  {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "INITIAL_MONTH"
+                    }
+                  }
+                ]
+              }
+            }
+          },
+          "f1316a6fb7d74f8d6be3": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "031598899b9b0e0708e3",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "MTD_ASPA_W/O_DISPATCH"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "9f679a305c40d0c859c9",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "MTD_WESM_DISPATCH"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "bc7eadd9a150b1d56739",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "STANDBY_MTD"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "899e8232684000294134",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "MTD_RM"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "3fc4958355741d006b0a",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "MTD_OUTAGE"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "donutChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "MTD_ASPA_W/O_DISPATCH"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "8fb1c7115edc14b20bcf": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "23cff71fae395e24241d",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                        }
+                      },
+                      "Property": "YTD_GENERATION_Fiscal"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                        }
+                      },
+                      "Property": "YTD_GENERATION_Fiscal"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "c92f08c1c23accbf67f1": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "43d118b90ceb7b810942",
+                  "type": "Advanced",
+                  "expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                            }
+                          },
+                          "Property": "MTD_AVAILABILITY"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                            }
+                          },
+                          "Property": "MTD_AVAILABILITY"
+                        }
+                      },
+                      "Function": 1
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "5e4b76c6f2a8883bd0f1": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "ec5b05c66e210d6b3eed",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "QUANTITY_TYPE"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'ASPA SCHEDULE'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "QUANTITY_TYPE"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "c556e69b88ea207a766b",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE_YTD"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE_YTD"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "67af2d87aaebf78e9562": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "56b737952ef6af4cfd29",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "QUANTITY_TYPE"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'MQ'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "QUANTITY_TYPE"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "b69e17e367d13c926fed",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "LINE_ITEM_SUB_LABEL"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'WESM TRADING'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "LINE_ITEM_SUB_LABEL"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "c769811dbb11028636a7",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE_YTD"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE_YTD"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "2857f7079bb58bc61c96": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "a98ca8277b1d849d3e87",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "QUANTITY_TYPE"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'DR QUANTITY'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'FR QUANTITY'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'RD QUANTITY'"
+                                  }
+                                }
+                              ],
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'RU QUANTITY'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "QUANTITY_TYPE"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "fc68bfd6b364a375c260",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "LINE_ITEM_SUB_LABEL"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'RESERVE TRADING'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "LINE_ITEM_SUB_LABEL"
+                    }
+                  },
+                  "howCreated": 1
+                },
+                {
+                  "name": "3660d8fddcb06b9822a3",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE_YTD"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "RM_RATE_YTD"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "a1276909c7ee772823a9": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "9a4a64f14bd746066ae5",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL_PER_HOUR"
+                        }
+                      },
+                      "Property": "YTD_Weighted_fuel_Rate_Fiscal"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "dc14151c4e3c834a3e01",
+                  "type": "Categorical",
+                  "filter": {
+                    "Version": 2,
+                    "From": [
+                      {
+                        "Name": "d",
+                        "Entity": "DAILY_PNL_PER_HOUR",
+                        "Type": 0
+                      }
+                    ],
+                    "Where": [
+                      {
+                        "Condition": {
+                          "In": {
+                            "Expressions": [
+                              {
+                                "Column": {
+                                  "Expression": {
+                                    "SourceRef": {
+                                      "Source": "d"
+                                    }
+                                  },
+                                  "Property": "LINE_ITEM_SUB_LABEL"
+                                }
+                              }
+                            ],
+                            "Values": [
+                              [
+                                {
+                                  "Literal": {
+                                    "Value": "'FUEL COST'"
+                                  }
+                                }
+                              ]
+                            ]
+                          }
+                        }
+                      }
+                    ]
+                  },
+                  "expression": {
+                    "Column": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL_PER_HOUR"
+                        }
+                      },
+                      "Property": "LINE_ITEM_SUB_LABEL"
+                    }
+                  },
+                  "howCreated": 1
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL_PER_HOUR"
+                        }
+                      },
+                      "Property": "YTD_Weighted_fuel_Rate_Fiscal"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "5531bec5c3dbe0885f20": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "e06776219e500eb8b96a",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "YTD_STANDBY"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "3b2b5e2e0c7c0da188eb",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "YTD_WESM"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "9c6b2cd9401bd9cc34aa",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "YTD_RM"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "758087ebc4594d892033",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "YTD_ASPA"
+                    }
+                  },
+                  "howCreated": 0
+                },
+                {
+                  "name": "e76463511c511c324002",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "YTD_OUTAGE"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "donutChart",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "YTD_STANDBY"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "24e042c85086e739b59f": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "11e2c7d45dd630558ca0",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "MTD_CAPACITY_FACTOR_Fiscal"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "MTD_CAPACITY_FACTOR_Fiscal"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "dd14ec8f40254ceeb183": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "10709350bb696ee61bb2",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "PEAKING_PLANTS_PROFILES"
+                        }
+                      },
+                      "Property": "DAY_CAPACITY_FACTOR"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Aggregation": {
+                      "Expression": {
+                        "Column": {
+                          "Expression": {
+                            "SourceRef": {
+                              "Entity": "ASSET_PERFORMANCE_DAILY_REPORT"
+                            }
+                          },
+                          "Property": "DAILY_CAPACITY_FACTOR"
+                        }
+                      },
+                      "Function": 0
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "6011c46eef9dbaa268aa": {
+            "filters": {
+              "byExpr": [
+                {
+                  "name": "eb5b30fce002e4a50a2d",
+                  "type": "Advanced",
+                  "expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "YTD_CF_Avg_Fiscal"
+                    }
+                  },
+                  "howCreated": 0
+                }
+              ]
+            },
+            "singleVisual": {
+              "visualType": "card",
+              "objects": {},
+              "orderBy": [
+                {
+                  "Direction": 2,
+                  "Expression": {
+                    "Measure": {
+                      "Expression": {
+                        "SourceRef": {
+                          "Entity": "DAILY_PNL"
+                        }
+                      },
+                      "Property": "YTD_CF_Avg_Fiscal"
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "77eaa025c4a2f361c2f8": {
+            "singleVisual": {
+              "visualType": "image",
+              "objects": {}
+            }
+          },
+          "b4adfb1563ba317f0d3e": {
+            "singleVisual": {
+              "visualType": "textbox",
+              "objects": {}
+            }
+          },
+          "706ad42e52d33cd5bf04": {
+            "singleVisual": {
+              "visualType": "textbox",
+              "objects": {}
+            }
+          }
+        }
+      }
+    },
+    "objects": {
+      "merge": {
+        "outspacePane": [
+          {
+            "properties": {
+              "expanded": {
+                "expr": {
+                  "Literal": {
+                    "Value": "false"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  }
+}

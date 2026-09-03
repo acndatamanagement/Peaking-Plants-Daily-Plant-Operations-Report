@@ -1,0 +1,52 @@
+table 'AI Remarks'
+	lineageTag: 8ae22701-8f43-4eea-abb5-95324f0ff0c1
+
+	column CALENDAR_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: f394488b-c0a0-4540-9eb3-9724044c26a9
+		summarizeBy: none
+		sourceColumn: CALENDAR_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column RESOURCE_NAME
+		dataType: string
+		lineageTag: 49e00dac-a650-4486-bebb-9536f9111810
+		summarizeBy: none
+		sourceColumn: RESOURCE_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column DAILY_OTUAGE_MWH
+		dataType: double
+		lineageTag: 5d59b725-e3c5-4212-b411-cf7f3f56ba1e
+		summarizeBy: sum
+		sourceColumn: DAILY_OTUAGE_MWH
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column AI_REMARKS
+		dataType: string
+		lineageTag: 10f69102-f4d9-4b75-b11e-a6d6e00a4085
+		summarizeBy: none
+		sourceColumn: AI_REMARKS
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'AI Remarks' = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(Snowflake.Databases("ayala-acen.snowflakecomputing.com","ACEN_XS_WH",[Implementation="2.0"]){[Name="PLANT_OPS"]}[Data], "With per_interval_data as (#(lf)SELECT#(lf)    b.billing_date,#(lf)    b.calendar_date,#(lf)    b.time_interval,#(lf)    b.resource_name,#(lf)    b.plant_name,#(lf)    a.capacity  as actual_capacity,#(lf)    b.capacity as registered_capacity,#(lf)    description,#(lf)    GREATEST(0,(b.capacity - a.capacity))/12 as outage_mwh#(lf)FROM#(lf)    plant_ops.asset_performance.plant_capacities_amber_qualified a#(lf)LEFT JOIN#(lf)     plant_ops.asset_performance.mq_allocation_and_capacity b on b.time_interval = a.time_interval and b.resource_name = a.resource_name#(lf)),#(lf)daily_data as (#(lf)SELECT#(lf)    calendar_date,#(lf)    resource_name,#(lf)    sum(outage_mwh) as daily_otuage_mwh,#(lf)    LEFT(LISTAGG(DISTINCT description, ', ')#(lf)             WITHIN GROUP (ORDER BY description), 8000) AS combined_reason_text#(lf)FROM per_interval_data#(lf)WHERE#(lf)    outage_mwh > 0#(lf)GROUP BY calendar_date, resource_name#(lf)),#(lf)final_summary as (#(lf)SELECT#(lf)    calendar_date,#(lf)    resource_name,#(lf)    daily_otuage_mwh,#(lf)    SNOWFLAKE.CORTEX.COMPLETE('openai-gpt-5-nano', CONCAT('Based ONLY on the text provided below,summarize only the technical outage causes into a single sentence (max 200 characters). Remove other remarks that inlcude net generation or gross generation. If for deration, no need to put the deration value. Do not infer, assume, or add any information not explicitly stated in the text. Do not use any word, like ""failure,"" that is not verbatim in the text. Cause: ', combined_reason_text)) as ai_remarks#(lf)FROM#(lf)    daily_data#(lf))#(lf)SELECT#(lf)    *#(lf)FROM#(lf)    final_summary#(lf)ORDER BY#(lf)    resource_name, calendar_date", null, [EnableFolding=true])
+				in
+				    Source
+
+	annotation PBI_ResultType = Table
+
+	annotation PBI_NavigationStepName = Navigation
+

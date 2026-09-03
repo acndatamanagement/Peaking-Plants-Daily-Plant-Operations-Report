@@ -1,0 +1,24 @@
+model Model
+	culture: en-US
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-PH
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBI_QueryOrder = ["ASSET_PERFORMANCE_DAILY_REPORT","Plant Dim","DAILY_PNL","DAILY_PNL_PER_HOUR","PEAKING_PLANTS_PROFILES","AI Remarks","RESOURCE NAME"]
+
+annotation PBI_ProTooling = ["DaxQueryView_Desktop","DevMode"]
+
+ref table ASSET_PERFORMANCE_DAILY_REPORT
+ref table 'Plant Dim'
+ref table DAILY_PNL
+ref table DAILY_PNL_PER_HOUR
+ref table PEAKING_PLANTS_PROFILES
+ref table 'AI Remarks'
+ref table 'RESOURCE NAME'
+
+ref cultureInfo en-US
+

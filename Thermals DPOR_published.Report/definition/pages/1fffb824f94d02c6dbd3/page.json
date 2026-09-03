@@ -1,0 +1,218 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "1fffb824f94d02c6dbd3",
+  "displayName": "INGRID 5",
+  "displayOption": "FitToPage",
+  "height": 1320,
+  "width": 1800,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "7014394ff3911be2de5d",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Plant Dim"
+              }
+            },
+            "Property": "PLANT_NAME"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "p",
+              "Entity": "Plant Dim",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "p"
+                          }
+                        },
+                        "Property": "PLANT_NAME"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'INGRID5'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User",
+        "objects": {
+          "general": [
+            {
+              "properties": {}
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "ThemeDataColor": {
+                    "ColorId": 0,
+                    "Percent": 0
+                  }
+                }
+              }
+            }
+          },
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Non RE plants (37).png'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "Non_RE_plants_(37)5310099102959226.png"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Normal'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "''"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "Literal": {
+                    "Value": "''"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "67c5286d83b397547a4f",
+      "type": "NoFilter"
+    },
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "48fb5e8904bce83bccca",
+      "type": "NoFilter"
+    },
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "10e149a4ec2e498cfa98",
+      "type": "NoFilter"
+    },
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "2973fec4d15d10dc4981",
+      "type": "NoFilter"
+    },
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "74f74b888fc6bd4743e8",
+      "type": "NoFilter"
+    },
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "3639f475d5f018d00e71",
+      "type": "NoFilter"
+    },
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "1d00a6ef85f9d52c3583",
+      "type": "NoFilter"
+    },
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "d7a6af163e9a84d6c668",
+      "type": "NoFilter"
+    },
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "587ef393c1104ae84121",
+      "type": "NoFilter"
+    },
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "14f0ca8ff4ab1a17509f",
+      "type": "NoFilter"
+    },
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "a3f6cd155ea6231beaf4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "43ef9255854b2ece6284",
+      "type": "NoFilter"
+    },
+    {
+      "source": "0de87f7a974c505d12ff",
+      "target": "968b6e83e89f0fc31a13",
+      "type": "NoFilter"
+    }
+  ]
+}

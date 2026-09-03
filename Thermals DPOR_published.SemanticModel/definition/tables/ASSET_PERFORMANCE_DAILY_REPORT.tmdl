@@ -1,0 +1,383 @@
+table ASSET_PERFORMANCE_DAILY_REPORT
+	lineageTag: 59d71a29-0e97-45a6-9470-15eadee3a4b9
+
+	measure YTD_GENERATION_Fiscal = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Determine custom fiscal year start (Dec 26th)
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('ASSET_PERFORMANCE_DAILY_REPORT'[DAILY_GENERATION]),
+			        -- 3. CRITICAL: Bypass the page-level "is_today_minus_2" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Clear the date restriction so the range can expand back to Dec 26
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Apply the Fiscal Year-to-Date range
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: #,0.00
+		lineageTag: 50e29c31-abce-42d5-8708-6439fb91cdf1
+
+	measure YTD_CF =
+			
+			TOTALYTD (
+			    AVERAGE( ASSET_PERFORMANCE_DAILY_REPORT[DAILY_CAPACITY_FACTOR]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 28b566a4-82de-4f2b-99d2-587fbdde4d14
+
+	measure MWH_ytd_GEN_LABEL =
+			
+			FORMAT('ASSET_PERFORMANCE_DAILY_REPORT'[YTD_GENERATION_Fiscal], "#,##0") & " MWh"
+		lineageTag: 233c31d5-1266-4f05-9476-7dd648f536f6
+
+	measure CF_MEASURE = MAX(ASSET_PERFORMANCE_DAILY_REPORT[MONTHLY_CAPACITY_FACTOR])
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 660b1b13-6e39-4fc6-a7f3-435c7347dfa2
+
+	measure MTD_CF_PLACEHOLDER = 1-[CF_MEASURE]
+		lineageTag: 4dfd28a5-f3ce-4424-965f-fdc97cc09545
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure YTD_AVAILABILITY_Fiscal = ```
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 1. Correct Fiscal Start to reset on December 26th
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			-- 2. Calculate the Average ignoring Date slicer but respecting other filters
+			VAR YTD_Avail = 
+			    CALCULATE(
+			        AVERAGEX(ASSET_PERFORMANCE_DAILY_REPORT,
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[DAILY_AVAILABILITY]),
+			        -- Target the Date column of the table being used in your report slicer
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    )
+			
+			RETURN 
+			    YTD_Avail
+			```
+		formatString: 0%;-0%;0%
+		lineageTag: b79012f0-0a47-48e9-b9c0-ba521de89178
+
+	measure 'Day WESM Rate' =
+			
+			DIVIDE(
+			    SUMX('PEAKING_PLANTS_PROFILES', 'PEAKING_PLANTS_PROFILES'[WESM_REV]),
+			    SUM('PEAKING_PLANTS_PROFILES'[WESM_DISPATCH])
+			)/ 1000
+		formatString: "₱"#,0.00;-"₱"#,0.00;"₱"#,0.00
+		lineageTag: c027953c-fb8e-4e5c-9f9c-7d606b868e56
+
+		annotation PBI_FormatHint = {"currencyCulture":"ceb-Latn-PH"}
+
+	measure 'Axis Min (26th of slicer month)' = ```
+			
+			VAR SelectedStart =
+			    MINX ( ALLSELECTED ( ASSET_PERFORMANCE_DAILY_REPORT[CALENDAR_DATE] ), ASSET_PERFORMANCE_DAILY_REPORT[CALENDAR_DATE] )
+			RETURN
+			DATE ( YEAR ( SelectedStart ), MONTH ( SelectedStart ), 26 )
+			
+			
+			```
+		formatString: General Date
+		lineageTag: 0f340c21-4c4e-4048-9a6b-18fe810260a1
+
+	measure 'Axis Max (25th next from slicer)' =
+			
+			VAR SelectedStart =
+			    MINX ( ALLSELECTED ( ASSET_PERFORMANCE_DAILY_REPORT[CALENDAR_DATE] ), ASSET_PERFORMANCE_DAILY_REPORT[CALENDAR_DATE] )
+			RETURN
+			DATE ( YEAR ( SelectedStart ), MONTH ( SelectedStart ) + 1, 25 )
+		formatString: General Date
+		lineageTag: cac819d4-b7ce-4f93-97c8-d88340432554
+
+	column BILLING_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 205f9685-a3b0-4fac-b310-2412ce6e8a4c
+		summarizeBy: none
+		sourceColumn: BILLING_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column CALENDAR_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: d5d67d52-f15d-4152-80a7-8b6c5a796067
+		summarizeBy: none
+		sourceColumn: CALENDAR_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column PLANT_NAME
+		dataType: string
+		lineageTag: a1bea1a5-6711-44a0-bee5-8add874a119a
+		summarizeBy: none
+		sourceColumn: PLANT_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column REGION_NAME
+		dataType: string
+		lineageTag: 236a8f21-344f-40d8-a133-ad81ad272f52
+		summarizeBy: none
+		sourceColumn: REGION_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column CAPACITY
+		dataType: double
+		lineageTag: 3cc1e9c1-bb94-4e34-b887-4d8c844a5a6d
+		summarizeBy: sum
+		sourceColumn: CAPACITY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column TECHNOLOGY
+		dataType: string
+		lineageTag: 5e10f5ca-e6f0-431c-b6f3-e9710adedf69
+		summarizeBy: none
+		sourceColumn: TECHNOLOGY
+
+		annotation SummarizationSetBy = Automatic
+
+	column ALLOCATION
+		dataType: string
+		lineageTag: e702f88d-2bf0-40c4-a00a-4f6833d4fede
+		summarizeBy: none
+		sourceColumn: ALLOCATION
+
+		annotation SummarizationSetBy = Automatic
+
+	column DAILY_GENERATION
+		dataType: double
+		lineageTag: e3dc9486-fbb5-4f8b-abc8-cbd7fc654038
+		summarizeBy: sum
+		sourceColumn: DAILY_GENERATION
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DAILY_CAPACITY_FACTOR
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 472ec16d-d461-4847-b6b6-74369b74b24b
+		summarizeBy: sum
+		sourceColumn: DAILY_CAPACITY_FACTOR
+
+		annotation SummarizationSetBy = Automatic
+
+	column DAILY_AVAILABILITY
+		dataType: double
+		formatString: 0%;-0%;0%
+		lineageTag: 5074440d-c9de-4f27-b4ec-97f8093d903a
+		summarizeBy: sum
+		sourceColumn: DAILY_AVAILABILITY
+
+		annotation SummarizationSetBy = Automatic
+
+	column DAILY_WEIGHTED_RATE
+		dataType: double
+		lineageTag: 12da6975-2a20-4558-8771-0f04dc9367d5
+		summarizeBy: sum
+		sourceColumn: DAILY_WEIGHTED_RATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column MONTHLY_CAPACITY_FACTOR
+		dataType: double
+		formatString: 0.0%;-0.0%;0.0%
+		lineageTag: 8bede623-4d6d-45c6-8c76-edf59a52fac8
+		summarizeBy: sum
+		sourceColumn: MONTHLY_CAPACITY_FACTOR
+
+		annotation SummarizationSetBy = Automatic
+
+	column MTD_GENERATION
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 738e43b3-472b-4909-9a92-6149462ce46a
+		summarizeBy: sum
+		sourceColumn: MTD_GENERATION
+
+		annotation SummarizationSetBy = Automatic
+
+	column MTD_AVAILABILITY
+		dataType: double
+		formatString: 0%;-0%;0%
+		lineageTag: 12ad0e43-dda6-4686-9a22-66ff5b565a24
+		summarizeBy: sum
+		sourceColumn: MTD_AVAILABILITY
+
+		annotation SummarizationSetBy = Automatic
+
+	column MTD_BUDGET_GENERATION
+		dataType: double
+		lineageTag: 1f24b98e-537e-4ba5-98f5-c00160f307eb
+		summarizeBy: sum
+		sourceColumn: MTD_BUDGET_GENERATION
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column MTD_BUDGET_AVAILABILITY
+		dataType: double
+		lineageTag: 82238d4f-76d0-4a69-b692-5fbd7bd5f6bd
+		summarizeBy: sum
+		sourceColumn: MTD_BUDGET_AVAILABILITY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ASSET_PERFORMANCE_DAILY_REPORT_UNIQUE_KEY
+		dataType: double
+		lineageTag: 01580f41-5d3c-4360-a374-7151519018d0
+		summarizeBy: sum
+		sourceColumn: ASSET_PERFORMANCE_DAILY_REPORT_UNIQUE_KEY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column DAY_OF_MONTH =
+			
+			DAY ( 'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE] )
+		formatString: 0
+		lineageTag: 0ed79501-ac49-454c-80f4-e33eece992be
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column CUSTOM_MONTH = ```
+			
+			VAR CurrentDate = 'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			VAR YearAdj =
+			    YEAR ( CurrentDate ) - IF ( MONTH ( CurrentDate ) = 1 && DAY ( CurrentDate ) < 26, 1, 0 )
+			VAR MonthAdj =
+			    MONTH ( CurrentDate ) - IF ( DAY ( CurrentDate ) < 26, 1, 0 )
+			RETURN
+			FORMAT ( DATE ( YearAdj, MonthAdj, 26 ), "YYYY-MM" )
+			
+			```
+		lineageTag: 3b9f3942-971c-42ae-b835-51fd268bd5f5
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column FISCAL_MONTH =
+			
+			VAR CurrentDate = 'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			VAR AdjustedDate =
+			    IF(DAY(CurrentDate) >= 26,
+			        EDATE(CurrentDate, 1),   -- Shift forward if it's 26 or later
+			        CurrentDate              -- Keep same if before 26
+			    )
+			RETURN
+			FORMAT(AdjustedDate, "YYYY-MM")
+		lineageTag: 9fbce0cf-9a60-4c3a-9ed6-c5f686fd1346
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column FISCAL_MONTH_START = ```
+			
+			VAR CurrentDate = 'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			RETURN
+			DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26) +
+			    IF(DAY(CurrentDate) < 26, -1, 0) * DAY(DATE(YEAR(CurrentDate), MONTH(CurrentDate), 1)) + 25
+			
+			```
+		formatString: General Date
+		lineageTag: 3d3cdfbe-005e-41a5-8f2d-9192e8e89d35
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column is_today_minus_2 =
+			
+			IF (
+			    DATEVALUE ( ASSET_PERFORMANCE_DAILY_REPORT[CALENDAR_DATE] ) = TODAY() - 2,
+			    "Yes",
+			    "No"
+			)
+		lineageTag: 73a8a59e-2082-415c-86d5-2c9d9a605b84
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column DAILY_ALLOCATION_COUNT
+		dataType: double
+		lineageTag: 28571bdd-12fd-4233-bacc-28940f29e59b
+		summarizeBy: sum
+		sourceColumn: DAILY_ALLOCATION_COUNT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column MTD_ALLOCATION_COUNT
+		dataType: double
+		lineageTag: 31b84691-90b3-4ae5-a61e-60376725d40c
+		summarizeBy: sum
+		sourceColumn: MTD_ALLOCATION_COUNT
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	partition ASSET_PERFORMANCE_DAILY_REPORT = m
+		mode: import
+		source =
+				let
+				    Source = Snowflake.Databases("ayala-acen.snowflakecomputing.com","ACEN_XS_WH",[Implementation="2.0"]),
+				    PLANT_OPS_Database = Source{[Name="PLANT_OPS",Kind="Database"]}[Data],
+				    ASSET_PERFORMANCE_Schema = PLANT_OPS_Database{[Name="ASSET_PERFORMANCE",Kind="Schema"]}[Data],
+				    ASSET_PERFORMANCE_DAILY_REPORT_Table = ASSET_PERFORMANCE_Schema{[Name="ASSET_PERFORMANCE_DAILY_REPORT",Kind="Table"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(ASSET_PERFORMANCE_DAILY_REPORT_Table, each ([PLANT_NAME] = "BPGC" or [PLANT_NAME] = "CIP2" or [PLANT_NAME] = "INGRID1" or [PLANT_NAME] = "INGRID2" or [PLANT_NAME] = "INGRID3" or [PLANT_NAME] = "INGRID4" or [PLANT_NAME] = "INGRID5" or [PLANT_NAME] = "INGRID6" or [PLANT_NAME] = "OSPGC"))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

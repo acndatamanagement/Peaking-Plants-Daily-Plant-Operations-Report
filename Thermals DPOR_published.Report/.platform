@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "Thermals DPOR_published"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "908d151f-705e-4bbf-978e-b0b219f7693d"
+  }
+}

@@ -1,0 +1,218 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "ef0359cc32c935a7f16e",
+  "displayName": "OSPGC",
+  "displayOption": "FitToPage",
+  "height": 1320,
+  "width": 1800,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "7014394ff3911be2de5d",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Plant Dim"
+              }
+            },
+            "Property": "PLANT_NAME"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "p",
+              "Entity": "Plant Dim",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "p"
+                          }
+                        },
+                        "Property": "PLANT_NAME"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'OSPGC'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User",
+        "objects": {
+          "general": [
+            {
+              "properties": {}
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "ThemeDataColor": {
+                    "ColorId": 0,
+                    "Percent": 0
+                  }
+                }
+              }
+            }
+          },
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Non RE plants (37).png'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "Non_RE_plants_(37)5310099102959226.png"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Normal'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "''"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "Literal": {
+                    "Value": "''"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "7ce4e07804f995637217",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "b8a34dea69efdb2509a4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "68a1d66a807f0487363f",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "8008da9e7f102209d0ea",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "baeb6f80e810c96956fd",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "93930aa705893e5e66ac",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "5d26b3a7816ffa182155",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "b437d15b676a1a86c18b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "a7eabc9f27402b790e56",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "13913add81cb39b8256c",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "113846937c7dbfefe3ef",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "3a8b399c318aaaed4741",
+      "type": "NoFilter"
+    },
+    {
+      "source": "c6e5adf1e94e21424ad8",
+      "target": "f10e8cdd7a2c2ecfdc6b",
+      "type": "NoFilter"
+    }
+  ]
+}

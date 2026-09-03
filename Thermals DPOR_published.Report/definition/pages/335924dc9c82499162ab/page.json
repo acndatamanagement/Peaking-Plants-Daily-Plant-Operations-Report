@@ -1,0 +1,218 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "335924dc9c82499162ab",
+  "displayName": "BPGC",
+  "displayOption": "FitToPage",
+  "height": 1320,
+  "width": 1800,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "7014394ff3911be2de5d",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Plant Dim"
+              }
+            },
+            "Property": "PLANT_NAME"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "p",
+              "Entity": "Plant Dim",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "p"
+                          }
+                        },
+                        "Property": "PLANT_NAME"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'BPGC'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User",
+        "objects": {
+          "general": [
+            {
+              "properties": {}
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "ThemeDataColor": {
+                    "ColorId": 0,
+                    "Percent": 0
+                  }
+                }
+              }
+            }
+          },
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Non RE plants (37).png'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "Non_RE_plants_(37)5310099102959226.png"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Normal'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "''"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "Literal": {
+                    "Value": "''"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "0f40e40daf3c87153e3a",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "faa7689b571e0a1e9f31",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "c32022a0b8520a978095",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "5bddffdf99799bc7c038",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "2b50614e0c3bd2d8602b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "d19c968c37a9310984ea",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "6cf08dd3141cb41dce37",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "f1193d050d45fc2089df",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "9475f143fa4ddb76f8d4",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "815ea4a7ea4609b2cd9b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "beeb02c2990609ee49a0",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "b96c3c50ae9bea6e5e8b",
+      "type": "NoFilter"
+    },
+    {
+      "source": "f292396b4fd4e2eabab3",
+      "target": "7c4ffb3db9d0d44c4a3e",
+      "type": "NoFilter"
+    }
+  ]
+}

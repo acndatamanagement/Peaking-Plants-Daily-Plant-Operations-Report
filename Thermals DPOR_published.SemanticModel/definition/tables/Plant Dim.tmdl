@@ -1,0 +1,29 @@
+table 'Plant Dim'
+	lineageTag: 04a61800-9385-4632-80ae-dd47d18eec82
+
+	column PLANT_NAME
+		dataType: string
+		lineageTag: f876fec8-7fb9-4c7a-b6ec-a06fa8b508f2
+		summarizeBy: none
+		sourceColumn: PLANT_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'Plant Dim' = m
+		mode: import
+		source =
+				let
+				    Source = Snowflake.Databases("ayala-acen.snowflakecomputing.com","ACEN_XS_WH",[Implementation="2.0"]),
+				    PLANT_OPS_Database = Source{[Name="PLANT_OPS",Kind="Database"]}[Data],
+				    ASSET_PERFORMANCE_Schema = PLANT_OPS_Database{[Name="ASSET_PERFORMANCE",Kind="Schema"]}[Data],
+				    MQ_ALLOCATION_AND_CAPACITY_Table = ASSET_PERFORMANCE_Schema{[Name="MQ_ALLOCATION_AND_CAPACITY",Kind="Table"]}[Data],
+				    #"Filtered Rows" = Table.SelectRows(MQ_ALLOCATION_AND_CAPACITY_Table, each ([PLANT_NAME] = "BPGC" or [PLANT_NAME] = "CIP2" or [PLANT_NAME] = "GIGAACE4 1" or [PLANT_NAME] = "GIGAACE4 2" or [PLANT_NAME] = "INGRID1" or [PLANT_NAME] = "INGRID2" or [PLANT_NAME] = "INGRID3" or [PLANT_NAME] = "INGRID4" or [PLANT_NAME] = "INGRID5" or [PLANT_NAME] = "INGRID6" or [PLANT_NAME] = "OSPGC")),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Filtered Rows",{"PLANT_NAME"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns")
+				in
+				    #"Removed Duplicates"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+

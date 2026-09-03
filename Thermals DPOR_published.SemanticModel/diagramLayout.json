@@ -1,0 +1,113 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 241.27783050635546,
+        "y": 0
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 724.39723768079216,
+            "y": 288.8563127698979
+          },
+          "nodeIndex": "ASSET_PERFORMANCE_DAILY_REPORT",
+          "nodeLineageTag": "59d71a29-0e97-45a6-9470-15eadee3a4b9",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 1265.7319614784515,
+            "y": 830.35357836485593
+          },
+          "nodeIndex": "Plant Dim",
+          "nodeLineageTag": "04a61800-9385-4632-80ae-dd47d18eec82",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 5
+        },
+        {
+          "location": {
+            "x": 907.20135324543821,
+            "y": 105.24299665030014
+          },
+          "nodeIndex": "DAILY_PNL",
+          "nodeLineageTag": "4a66d709-1dc3-408e-a620-375ea5ec47ef",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 263.13610495726317,
+            "y": 441.36895226677672
+          },
+          "nodeIndex": "DAILY_PNL_PER_HOUR",
+          "nodeLineageTag": "cbbcf6e0-e724-4082-9d20-beb3364c19a8",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 332.19342917196883,
+            "y": 9.8653320306722669
+          },
+          "nodeIndex": "PEAKING_PLANTS_PROFILES",
+          "nodeLineageTag": "a9885665-f01d-498e-bb63-4fc8c7b26e4e",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 1216.9785434721484,
+            "y": 229.40598492635053
+          },
+          "nodeIndex": "AI Remarks",
+          "nodeLineageTag": "8ae22701-8f43-4eea-abb5-95324f0ff0c1",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 1302.6717632878745,
+            "y": 0
+          },
+          "nodeIndex": "RESOURCE NAME",
+          "nodeLineageTag": "048741df-1b1d-4fac-9195-cb1aedba8a72",
+          "size": {
+            "height": 104,
+            "width": 234
+          },
+          "zIndex": 7
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 70.95554390096882,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

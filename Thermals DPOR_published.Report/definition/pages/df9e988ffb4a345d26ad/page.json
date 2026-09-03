@@ -1,0 +1,253 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "df9e988ffb4a345d26ad",
+  "displayName": "IPHI",
+  "displayOption": "FitToPage",
+  "height": 1320,
+  "width": 1800,
+  "filterConfig": {
+    "filters": [
+      {
+        "name": "7014394ff3911be2de5d",
+        "field": {
+          "Column": {
+            "Expression": {
+              "SourceRef": {
+                "Entity": "Plant Dim"
+              }
+            },
+            "Property": "PLANT_NAME"
+          }
+        },
+        "type": "Categorical",
+        "filter": {
+          "Version": 2,
+          "From": [
+            {
+              "Name": "p",
+              "Entity": "Plant Dim",
+              "Type": 0
+            }
+          ],
+          "Where": [
+            {
+              "Condition": {
+                "In": {
+                  "Expressions": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Source": "p"
+                          }
+                        },
+                        "Property": "PLANT_NAME"
+                      }
+                    }
+                  ],
+                  "Values": [
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'INGRID1'"
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'INGRID2'"
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'INGRID3'"
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'INGRID4'"
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'INGRID5'"
+                        }
+                      }
+                    ],
+                    [
+                      {
+                        "Literal": {
+                          "Value": "'INGRID6'"
+                        }
+                      }
+                    ]
+                  ]
+                }
+              }
+            }
+          ]
+        },
+        "howCreated": "User",
+        "objects": {
+          "general": [
+            {
+              "properties": {}
+            }
+          ]
+        }
+      }
+    ]
+  },
+  "objects": {
+    "background": [
+      {
+        "properties": {
+          "color": {
+            "solid": {
+              "color": {
+                "expr": {
+                  "ThemeDataColor": {
+                    "ColorId": 0,
+                    "Percent": 0
+                  }
+                }
+              }
+            }
+          },
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Non RE plants (37).png'"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "ResourcePackageItem": {
+                    "PackageName": "RegisteredResources",
+                    "PackageType": 1,
+                    "ItemName": "Non_RE_plants_(37)5310099102959226.png"
+                  }
+                }
+              },
+              "scaling": {
+                "expr": {
+                  "Literal": {
+                    "Value": "'Normal'"
+                  }
+                }
+              }
+            }
+          },
+          "transparency": {
+            "expr": {
+              "Literal": {
+                "Value": "0D"
+              }
+            }
+          }
+        }
+      }
+    ],
+    "outspace": [
+      {
+        "properties": {
+          "image": {
+            "image": {
+              "name": {
+                "expr": {
+                  "Literal": {
+                    "Value": "''"
+                  }
+                }
+              },
+              "url": {
+                "expr": {
+                  "Literal": {
+                    "Value": "''"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    ]
+  },
+  "visualInteractions": [
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "e7e32c3dabd14f4568d2",
+      "type": "NoFilter"
+    },
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "1f05342fe3cedc7a36b6",
+      "type": "NoFilter"
+    },
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "91685c15e7960562fc78",
+      "type": "NoFilter"
+    },
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "e3e90122d7b941d2779a",
+      "type": "NoFilter"
+    },
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "d226b305e7f7b42bd998",
+      "type": "NoFilter"
+    },
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "1c9f75325ca968c82a7c",
+      "type": "NoFilter"
+    },
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "ea30a1f6857add8011ed",
+      "type": "NoFilter"
+    },
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "e5883c136ff5cda8a2a1",
+      "type": "NoFilter"
+    },
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "460795e03bbc0b95abeb",
+      "type": "NoFilter"
+    },
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "7e97001e0e7918012df5",
+      "type": "NoFilter"
+    },
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "04bea22d19c362b7b955",
+      "type": "NoFilter"
+    },
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "39537a8215a5c17d6964",
+      "type": "NoFilter"
+    },
+    {
+      "source": "316406cbcae80d7f065f",
+      "target": "fde17f5ecef59530de0e",
+      "type": "NoFilter"
+    }
+  ]
+}

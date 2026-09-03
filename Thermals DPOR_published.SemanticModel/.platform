@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "Thermals DPOR_published"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "8dc0fade-03c1-44c1-a350-dc8073855630"
+  }
+}

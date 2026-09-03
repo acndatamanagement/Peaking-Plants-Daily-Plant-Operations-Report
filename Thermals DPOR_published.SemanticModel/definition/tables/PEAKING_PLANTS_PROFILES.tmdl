@@ -1,0 +1,1748 @@
+table PEAKING_PLANTS_PROFILES
+	lineageTag: a9885665-f01d-498e-bb63-4fc8c7b26e4e
+
+	measure 'ASPA Price kWh' =
+			
+			DIVIDE(
+			    AVERAGE('PEAKING_PLANTS_PROFILES'[ASPA_PRICE]),
+			    1000
+			)
+		lineageTag: f51ff068-5a1a-4d44-b0b0-3a19d36af441
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'RM kWh' =
+			
+			DIVIDE( AVERAGE('PEAKING_PLANTS_PROFILES'[RM_PRICE]), 1000 )
+		lineageTag: 4e41f6b6-0ae8-47de-bdbe-17cd106629da
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'WESM Price' =
+			
+			DIVIDE(AVERAGE('PEAKING_PLANTS_PROFILES'[ENERGY_PRICE]), 1000)
+		lineageTag: 90689b6e-b8a4-414f-87dc-39431bc40527
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure MTD_PEAKING =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			RETURN
+			CALCULATE(
+			    SUMX(
+			        'PEAKING_PLANTS_PROFILES',
+			        'PEAKING_PLANTS_PROFILES'[AVAILABLE_CAPACITY]
+			    ),
+			    FILTER(
+			        ALL('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE] <= CurrentDate
+			    )
+			)
+		lineageTag: 23a6bb03-b016-49d2-b48b-38914408cacc
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure YTD_PEAKING =
+			
+			TOTALYTD (
+			    SUM ( 'PEAKING_PLANTS_PROFILES'[AVAILABLE_CAPACITY]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		lineageTag: 8a6f9bfb-e48b-4261-ae71-dfdae09eb9da
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Daily Value' =
+			
+			SUM('PEAKING_PLANTS_PROFILES'[ASPA_SCHED]) +
+			SUM('PEAKING_PLANTS_PROFILES'[STANDBY_CAPACITY]) +
+			SUM('PEAKING_PLANTS_PROFILES'[EXPORT_MWH]) +
+			SUM('PEAKING_PLANTS_PROFILES'[RM_SCHED])   -- verify table/column name
+		lineageTag: c36433cd-ddb4-4510-b9c6-0278d74b9145
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure MTD_ASPA_W/O_DISPATCH = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Fiscal Month Start (the 26th)
+			VAR FiscalStart =
+			    DATE(
+			        YEAR(CurrentDate),
+			        -- If the day is less than 26, the cycle started in the previous month.
+			        MONTH(CurrentDate) - IF(DAY(CurrentDate) < 26, 1, 0),
+			        26 
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[ASPA_SCHED_WO_DISPATCH]),
+			        -- 3. CRITICAL: Removes the page-level "is_today_minus_2" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Removes the date restriction so we can see the full range from the 26th
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Apply the Fiscal Month range
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE],
+			            FiscalStart,
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: #,0.0
+		lineageTag: 4fbf340c-695d-46c2-8026-3f51daafce45
+
+	measure MTD_WESM_DISPATCH = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Fiscal Month Start (the 26th)
+			VAR FiscalStart =
+			    DATE(
+			        YEAR(CurrentDate),
+			        -- If the day is less than 26, the cycle started in the previous month.
+			        MONTH(CurrentDate) - IF(DAY(CurrentDate) < 26, 1, 0),
+			        26 
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[WESM_DISPATCH]),
+			        -- 3. CRITICAL: Removes the page-level "is_today_minus_2" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Removes the date restriction so we can see the full range from the 26th
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Apply the Fiscal Month range
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE],
+			            FiscalStart,
+			            CurrentDate
+			        )
+			    )
+			```
+		lineageTag: 59a7acc6-7eaf-4f34-9b61-6be3e1d035c3
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure STANDBY_MTD = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Fiscal Month Start (the 26th)
+			VAR FiscalStart =
+			    DATE(
+			        YEAR(CurrentDate),
+			        -- If the day is less than 26, the cycle started in the previous month.
+			        MONTH(CurrentDate) - IF(DAY(CurrentDate) < 26, 1, 0),
+			        26 
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[STANDBY_CAPACITY]),
+			        -- 3. CRITICAL: Removes the page-level "is_today_minus_2" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Removes the date restriction so we can see the full range from the 26th
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Apply the Fiscal Month range
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE],
+			            FiscalStart,
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: #,0
+		lineageTag: 7d3b9384-5439-4ac0-86b7-145552e2cb19
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure YTD_ASPA =
+			
+			TOTALYTD(
+			    SUM('PEAKING_PLANTS_PROFILES'[ASPA_SCHED]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		lineageTag: 5b450dfc-e7a3-4ad7-9076-c753ad83ed68
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure YTD_RM =
+			
+			TOTALYTD(
+			    SUM('PEAKING_PLANTS_PROFILES'[RM_SCHED]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		lineageTag: 8555516c-48aa-4c44-8746-275884c679b6
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure YTD_STANDBY =
+			
+			TOTALYTD(
+			    SUM('PEAKING_PLANTS_PROFILES'[STANDBY_CAPACITY]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		formatString: #,0
+		lineageTag: 09f3934d-6a09-459e-86b1-2d1725b6aaae
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure YTD_WESM =
+			
+			TOTALYTD(
+			    SUM('PEAKING_PLANTS_PROFILES'[WESM_DISPATCH]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		formatString: #,0
+		lineageTag: 09d9cb01-6bce-43f9-aa19-c414a7cf115d
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure CF_NUMERATOR = ```
+			
+			VAR ASPA_DAILY = SUM(PEAKING_PLANTS_PROFILES[ASPA_SCHED])
+			VAR WESM_DAILY = SUM(PEAKING_PLANTS_PROFILES[WESM_DISPATCH])
+			VAR RM_DAILY = SUM(PEAKING_PLANTS_PROFILES[RM_SCHED])
+			
+			RETURN 
+			ASPA_DAILY + WESM_DAILY + RM_DAILY
+			```
+		lineageTag: d14028ff-bb35-43a4-a066-dca450343980
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure CF_REGISTERED_CAPACITY = ```
+			
+			
+			VAR avail_cap = SUM('PEAKING_PLANTS_PROFILES'[REGISTERED_CAPACITY])
+			
+			RETURN
+			avail_cap/12
+			
+			
+			
+			```
+		lineageTag: a08bc2b7-044b-4392-9976-d8cca4c7b67a
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure DAY_CAPACITY_FACTOR = ```
+			
+			VAR SCHED = PEAKING_PLANTS_PROFILES[CF_NUMERATOR]
+			VAR REGISTERED_CAP = PEAKING_PLANTS_PROFILES[CF_REGISTERED_CAPACITY]
+			RETURN
+			DIVIDE(SCHED, REGISTERED_CAP, 0) + 0  -- returns a decimal (e.g., 0.85 for 85%)
+			
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: aec7e819-191c-4644-9b3d-20f9943dab45
+
+	measure MTD_OUTAGE = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Fiscal Month Start (the 26th)
+			VAR FiscalStart =
+			    DATE(
+			        YEAR(CurrentDate),
+			        -- If the day is less than 26, the cycle started in the previous month.
+			        MONTH(CurrentDate) - IF(DAY(CurrentDate) < 26, 1, 0),
+			        26 
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[OUTAGE_CAPACITY]),
+			        -- 3. CRITICAL: Removes the page-level "is_today_minus_2" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Removes the date restriction so we can see the full range from the 26th
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Apply the Fiscal Month range
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE],
+			            FiscalStart,
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: 0.00
+		lineageTag: fc63983a-ac6d-42a0-ae7b-0d796fe28cd0
+
+	measure YTD_OUTAGE =
+			
+			TOTALYTD(
+			    SUM('PEAKING_PLANTS_PROFILES'[OUTAGE_CAPACITY]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		formatString: #,0
+		lineageTag: d34831d7-542e-4904-8fb3-8aca620acbd6
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure YTD_CAPACITY_FACTOR =
+			
+			AVERAGEX(
+			    DATESYTD('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			    [DAY_CAPACITY_FACTOR]
+			)
+		lineageTag: e90b86e4-5153-403e-abbd-b17aa5685d26
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'MTD_RM_RATE Sched' =
+			
+			TOTALMTD(
+			    (DIVIDE(
+			        SUM('PEAKING_PLANTS_PROFILES'[RM_REV]),
+			        SUM('PEAKING_PLANTS_PROFILES'[RM_SCHED])
+			    ) / 1000)+0,
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		formatString: 0
+		lineageTag: 40725f3a-3397-40f0-99f5-4c85e0f231bd
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure MTD_RM_WO_DISPATCH = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Fiscal Month Start (the 26th)
+			VAR FiscalStart =
+			    DATE(
+			        YEAR(CurrentDate),
+			        -- If the day is less than 26, the cycle started in the previous month.
+			        MONTH(CurrentDate) - IF(DAY(CurrentDate) < 26, 1, 0),
+			        26 
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[RM_SCHED_WO_DISPATCH]),
+			        -- 3. CRITICAL: Removes the page-level "is_today_minus_2" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Removes the date restriction so we can see the full range from the 26th
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Apply the Fiscal Month range
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE],
+			            FiscalStart,
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: #,0
+		lineageTag: eea57171-6b93-48cf-aad8-2e4c817c3735
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure DayRM_Dispatch_Rate =
+			
+			VAR Rate =
+			    DIVIDE(
+			        SUMX('PEAKING_PLANTS_PROFILES', 'PEAKING_PLANTS_PROFILES'[RM_DISPATCH_REV]),
+			        SUM('PEAKING_PLANTS_PROFILES'[RM_DISPATCH])
+			    ) / 1000
+			RETURN
+			Rate + 0
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: 498f9126-03fa-4f31-a114-3ab5139c3193
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure RM_Sched_Rate =
+			
+			(DIVIDE(
+			    SUMX('PEAKING_PLANTS_PROFILES', 'PEAKING_PLANTS_PROFILES'[RM_REV]),
+			    SUM('PEAKING_PLANTS_PROFILES'[RM_SCHED])
+			)/ 1000) +0
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: 602cfbc7-a2d7-49b3-8cc7-0b4f8f866926
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure MTD_WESM_Rate_Fiscal =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('PEAKING_PLANTS_PROFILES'),
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] <= CurrentDate
+			    )
+			VAR TotalWESMRev =
+			    SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[WESM_REV])
+			VAR TotalWESMDispatch =
+			    SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[WESM_DISPATCH])
+			VAR Rate =
+			    DIVIDE(TotalWESMRev, TotalWESMDispatch) / 1000
+			RETURN
+			Rate + 0
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: 02f43ebf-6154-462a-831b-e6a7322fbb19
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure ASPA_Sched_Rate =
+			
+			(DIVIDE(
+			    SUMX('PEAKING_PLANTS_PROFILES', 'PEAKING_PLANTS_PROFILES'[ASPA_REV]),
+			    SUM('PEAKING_PLANTS_PROFILES'[ASPA_SCHED]),
+			    0
+			) / 1000) + 0
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: 5f337208-71bc-4121-bbc3-5bf99de366c8
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure MTD_ASPA_RATE =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('PEAKING_PLANTS_PROFILES'),
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] <= CurrentDate
+			    )
+			VAR WeightedSum =
+			    SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[ASPA_REV])
+			VAR TotalQuantity =
+			    SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[ASPA_SCHED])
+			RETURN
+			DIVIDE(WeightedSum, TotalQuantity) / 1000 + 0
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: f296c023-2a88-4148-a4c0-f552f14cd0f4
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'MTD RM Rate Dispatch' =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('PEAKING_PLANTS_PROFILES'),
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] <= CurrentDate
+			    )
+			VAR WeightedSum =
+			    SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[RM_DISPATCH_REV])
+			VAR TotalQuantity =
+			    SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[RM_DISPATCH])
+			RETURN
+			DIVIDE(WeightedSum, TotalQuantity) / 1000 + 0
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: 3a6cdaf1-dbfe-40d1-bfe2-123749994eb2
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure MTD_RM_RATE_Sched_Fiscal =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('PEAKING_PLANTS_PROFILES'),
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] <= CurrentDate
+			    )
+			VAR WeightedSum =
+			    SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[RM_REV])
+			VAR TotalQuantity =
+			    SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[RM_SCHED])
+			RETURN
+			DIVIDE(WeightedSum, TotalQuantity) / 1000 + 0
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: 6cd1454d-1d61-4a90-ad9b-3a6b1d0072d9
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure MTD_RM_DISPATCH = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Fiscal Month Start (the 26th)
+			VAR FiscalStart =
+			    DATE(
+			        YEAR(CurrentDate),
+			        -- If the day is less than 26, the cycle started in the previous month.
+			        MONTH(CurrentDate) - IF(DAY(CurrentDate) < 26, 1, 0),
+			        26 
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[RM_DISPATCH]),
+			        -- 3. CRITICAL: Removes the page-level "is_today_minus_2" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Removes the date restriction so we can see the full range from the 26th
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Apply the Fiscal Month range
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE],
+			            FiscalStart,
+			            CurrentDate
+			        )
+			    )
+			```
+		lineageTag: edb12159-3ad9-4c2c-b5cf-52a4bf019201
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure YTD_ASPA_Sched_Rate = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Determine custom fiscal year start (Dec 26th)
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        -- 3. Final Weighted Calculation (Rate per MWh / 1000)
+			        DIVIDE(
+			            SUM('PEAKING_PLANTS_PROFILES'[ASPA_REV]),
+			            SUM('PEAKING_PLANTS_PROFILES'[ASPA_SCHED]),
+			            0
+			        ) / 1000,
+			        -- 4. CRITICAL: Bypass the page-level "is_today_minus_2" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 5. Clear the date restriction so the range can expand back to Dec 26
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 6. Apply the Fiscal Year-to-Date range
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    ) + 0
+			```
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: d02d3ff2-4a23-4c94-9b6e-fb2f059bc851
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure YTD_RM_Sched_Rate_Fiscal = ```
+			
+			-- 1. Captures the date from your slicer or defaults to Today-2 (via the page filter)
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Dec 26 start point for the YTD cycle
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        -- 3. Final weighted calculation (Sum of Revenue / Sum of Schedule)
+			        DIVIDE(
+			            SUM('PEAKING_PLANTS_PROFILES'[RM_REV]),
+			            SUM('PEAKING_PLANTS_PROFILES'[RM_SCHED]),
+			            0
+			        ) / 1000,
+			        -- 4. CRITICAL: Bypass the page-level "is_today_minus_2" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 5. Clear the date restriction so the range can expand back to Dec 26
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 6. Apply the Fiscal Year-to-Date range
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    ) + 0
+			```
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: d18e059e-60fe-4344-8768-585b0e6df7cd
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure YTD_RM_Rate_Dispatch_Fiscal = ```
+			
+			-- 1. Captures the date from your slicer or the page-level "Today-2" filter
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Dec 26 start point for the YTD cycle
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        -- 3. Final weighted rate calculation (/1000 for formatting)
+			        DIVIDE(
+			            SUM('PEAKING_PLANTS_PROFILES'[RM_DISPATCH_REV]),
+			            SUM('PEAKING_PLANTS_PROFILES'[RM_DISPATCH]),
+			            0
+			        ) / 1000,
+			        -- 4. CRITICAL: Allows the measure to see the whole year despite the page filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 5. Clears date slicers to allow the DATESBETWEEN range to work
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 6. Re-applies the range from Dec 26 to the selected CurrentDate
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    ) + 0
+			```
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: 78040a5c-482a-44d8-a3da-775ca34f4e01
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure Daily_WESM_Rate =
+			
+			VAR Rate =
+			    DIVIDE(
+			        SUMX('PEAKING_PLANTS_PROFILES', 'PEAKING_PLANTS_PROFILES'[WESM_REV]),
+			        SUM('PEAKING_PLANTS_PROFILES'[WESM_DISPATCH])
+			    ) / 1000
+			RETURN
+			Rate + 0
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: c6ceb89a-449c-4451-bfa1-301c1a9c3e78
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure YTD_WESM_Rate_Fiscal = ```
+			
+			-- 1. Captures the date from your slicer or the page-level "Today-2" filter
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Dec 26 start point for the YTD cycle
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        -- 3. Final weighted rate calculation (/1000 for formatting)
+			        DIVIDE(
+			            SUM('PEAKING_PLANTS_PROFILES'[WESM_REV]),
+			            SUM('PEAKING_PLANTS_PROFILES'[WESM_DISPATCH]),
+			            0
+			        ) / 1000,
+			        -- 4. CRITICAL: Allows the measure to see the whole year despite the page filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 5. Clears date slicers to allow the DATESBETWEEN range to work
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 6. Re-applies the range from Dec 26 to the selected CurrentDate
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    ) + 0
+			```
+		formatString: """₱""#,0.00;-""₱""#,0.00;""-"""
+		lineageTag: 66999c31-1867-4b53-94ef-0e7886de20c9
+
+		annotation PBI_FormatHint = {"isCustom":true}
+
+	measure 'YTD ASPA DISPATCH' =
+			
+			TOTALYTD(
+			    SUM('PEAKING_PLANTS_PROFILES'[ASPA_DISPATCH]),
+			    'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE]
+			)
+		formatString: 0
+		lineageTag: 9f1560b2-48d3-4ca3-8c8b-ec2185517c67
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure YTD_ASPA_W/O_DISPATCH =
+			
+			TOTALYTD(
+			    SUM('PEAKING_PLANTS_PROFILES'[ASPA_SCHED_WO_DISPATCH]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		lineageTag: 5717f414-7625-4eea-b0d7-4d0f4e6e7023
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'YTD RM DISPATCH' =
+			
+			TOTALYTD(
+			    SUM('PEAKING_PLANTS_PROFILES'[RM_DISPATCH]),
+			    'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE]
+			)
+		lineageTag: f178c7cc-70be-4bbf-b80b-cb6c897bf02f
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure YTD_RM_DISPATCH =
+			
+			TOTALYTD(
+			    SUM('PEAKING_PLANTS_PROFILES'[RM_DISPATCH]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		formatString: #,0
+		lineageTag: d68cbad7-7431-46f9-96ab-c5f814456b8f
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure YTD_RM_W/O_DISPATCH =
+			
+			TOTALYTD(
+			    SUM('PEAKING_PLANTS_PROFILES'[RM_SCHED_WO_DISPATCH]),
+			    'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]
+			)
+		formatString: #,0
+		lineageTag: a321c299-9ca8-4768-a904-fca958685232
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure MTD_ASPA_DISPATCH = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Fiscal Month Start (the 26th)
+			VAR FiscalStart =
+			    DATE(
+			        YEAR(CurrentDate),
+			        -- If the day is less than 26, the cycle started in the previous month.
+			        MONTH(CurrentDate) - IF(DAY(CurrentDate) < 26, 1, 0),
+			        26 
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[ASPA_DISPATCH]),
+			        -- 3. CRITICAL: Removes the page-level "is_today_minus_2" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Removes the date restriction so we can see the full range from the 26th
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Apply the Fiscal Month range
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE],
+			            FiscalStart,
+			            CurrentDate
+			        )
+			    )
+			```
+		lineageTag: 58eb3f47-ec0b-4720-8f31-e8b9c998fe7d
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure MTD_ASPA_DISPATCH_Fiscal =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('PEAKING_PLANTS_PROFILES'),
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] <= CurrentDate
+			    )
+			RETURN
+			SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[ASPA_DISPATCH])
+		formatString: #,0
+		lineageTag: 43208f1c-98d7-4399-8d84-c35343f1f2d1
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure MTD_ASPA_WO_DISPATCH_Fiscal =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('PEAKING_PLANTS_PROFILES'),
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] <= CurrentDate
+			    )
+			RETURN
+			SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[ASPA_SCHED_WO_DISPATCH])
+		formatString: #,0.00
+		lineageTag: 4e115d9f-5327-409b-a4d6-47a09a4275fd
+
+	measure MTD_OUTAGE_Fiscal =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('PEAKING_PLANTS_PROFILES'),
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] <= CurrentDate
+			    )
+			RETURN
+			SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[OUTAGE_CAPACITY])
+		formatString: #,0.00
+		lineageTag: cce07671-dca8-4a29-84cb-1a8f6e3cd06d
+
+	measure MTD_RM_WO_DISPATCH_Fiscal =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('PEAKING_PLANTS_PROFILES'),
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] <= CurrentDate
+			    )
+			RETURN
+			SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[RM_SCHED_WO_DISPATCH])
+		formatString: #,0.00
+		lineageTag: 94c248d6-ec06-4c9d-b66c-252d90f8b71e
+
+	measure STANDBY_MTD_Fiscal =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('PEAKING_PLANTS_PROFILES'),
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] <= CurrentDate
+			    )
+			RETURN
+			SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[STANDBY_CAPACITY])
+		formatString: #,0.00
+		lineageTag: 7e5e87f9-232b-4641-b408-3c00d9e92502
+
+	measure WESM_MTD_Fiscal =
+			
+			VAR CurrentDate = MAX('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('PEAKING_PLANTS_PROFILES'),
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] <= CurrentDate
+			    )
+			RETURN
+			SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[WESM_DISPATCH])
+		lineageTag: d58f1618-c785-4c7c-8057-344cf90707b9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure MTD_RM_DISPATCH_Fiscal =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalMonthStart =
+			    IF(
+			        DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26),
+			        DATE(YEAR(CurrentDate), MONTH(CurrentDate) - 1, 26)
+			    )
+			VAR FilteredTable =
+			    FILTER(
+			        ALLSELECTED('PEAKING_PLANTS_PROFILES'),
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] >= FiscalMonthStart &&
+			        'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] <= CurrentDate
+			    )
+			RETURN
+			SUMX(FilteredTable, 'PEAKING_PLANTS_PROFILES'[RM_DISPATCH])
+		formatString: #,0.00
+		lineageTag: b761d9d4-fd33-470b-9f70-3409f3923df8
+
+	measure YTD_ASPA_Dispatch_Fiscal = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Dec 26 start point
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[ASPA_DISPATCH]),
+			        -- 3. Ignores the "Yes" filter so we can see the whole year
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Ignores the date slicer restriction to allow the range to expand
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Re-applies the specific range we want
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: #,0
+		lineageTag: 2ebf5f6b-01f8-4ed8-82bd-0b14c0d7547e
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure YTD_ASPA_WO_Dispatch_Fiscal = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Dec 26 start point
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[ASPA_SCHED_WO_DISPATCH]),
+			        -- 3. Ignores the "Yes" filter so we can see the whole year
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Ignores the date slicer restriction to allow the range to expand
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Re-applies the specific range we want
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: #,0
+		lineageTag: 5aa0106e-3bfd-4f45-8c5d-f2720ecc00fa
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure YTD_OUTAGE_Fiscal = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Dec 26 start point
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[OUTAGE_CAPACITY]),
+			        -- 3. Ignores the "Yes" filter so we can see the whole year
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Ignores the date slicer restriction to allow the range to expand
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Re-applies the specific range we want
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: #,0
+		lineageTag: 1c9faa17-5f3d-4260-9db8-ad5feb39cb30
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure YTD_RM_Dispatch_Fiscal = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Dec 26 start point
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[RM_DISPATCH]),
+			        -- 3. Ignores the "Yes" filter so we can see the whole year
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Ignores the date slicer restriction to allow the range to expand
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Re-applies the specific range we want
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: #,0
+		lineageTag: 1c7dd771-d0eb-4456-ade8-3917662b2cb4
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure YTD_RM_WO_Dispatch_Fiscal = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Dec 26 start point
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[RM_SCHED_WO_DISPATCH]),
+			        -- 3. Ignores the "Yes" filter so we can see the whole year
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Ignores the date slicer restriction to allow the range to expand
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Re-applies the specific range we want
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: #,0
+		lineageTag: 93369f08-e4d3-4d24-83f2-7488fa0f72a0
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure YTD_WESM_Fiscal = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Dec 26 start point
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[WESM_DISPATCH]),
+			        -- 3. Ignores the "Yes" filter so we can see the whole year
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Ignores the date slicer restriction to allow the range to expand
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Re-applies the specific range we want
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: #,0.00
+		lineageTag: be63de45-08d4-4e0e-b8d8-037a74341749
+
+	measure YTD_STANDBY_Fiscal = ```
+			
+			-- 1. If page filter is "Yes", this is Today-2. If slicer is used, this is the Sliced Date.
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			
+			-- 2. Logic to find the Dec 26 start point
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        SUM('PEAKING_PLANTS_PROFILES'[STANDBY_CAPACITY]),
+			        -- 3. Ignores the "Yes" filter so we can see the whole year
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Ignores the date slicer restriction to allow the range to expand
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Re-applies the specific range we want
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: #,0
+		lineageTag: 1a859e29-0889-40c7-b82e-ed9866354208
+
+		annotation PBI_FormatHint = {"isDecimal":true}
+
+	measure YTD_CF_Avg_Fiscals =
+			
+			VAR CurrentDate = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			VAR FiscalYearStart =
+			    IF(
+			        MONTH(CurrentDate) > 1 || (MONTH(CurrentDate) = 1 && DAY(CurrentDate) >= 26),
+			        DATE(YEAR(CurrentDate), 1, 26),
+			        DATE(YEAR(CurrentDate) - 1, 1, 26)
+			    )
+			VAR FiscalDates =
+			    FILTER(
+			        ALL('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE] >= FiscalYearStart &&
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE] <= CurrentDate
+			    )
+			RETURN
+			AVERAGEX(
+			    FiscalDates,
+			    CALCULATE(
+			        [DAY_CAPACITY_FACTOR],
+			        'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE] = EARLIER('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			    )
+			)
+		lineageTag: 5c6db690-5046-4a45-8fe6-2634287e02e9
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure MTD_CAPACITY_FACTOR_Fiscal = ```
+			
+			VAR CurrentDate = MAX(ASSET_PERFORMANCE_DAILY_REPORT[CALENDAR_DATE])
+			VAR FiscalStart = 
+			    DATE(
+			        YEAR(CurrentDate), 
+			        MONTH(CurrentDate) - IF(DAY(CurrentDate) < 26, 1, 0), 
+			        26
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        AVERAGEX(
+			            VALUES('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			            [DAY_CAPACITY_FACTOR]
+			        ),
+			        -- 1. Remove the page-level "Yes/No" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 2. Remove any other date-specific filters
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 3. Apply the actual Fiscal MTD range
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE],
+			            FiscalStart,
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 2038ff73-3507-4115-85cc-93ed125f2e45
+
+	measure YTD_CAPACITY_FACTOR_Fiscal = ```
+			
+			VAR CurrentDate = MAX(ASSET_PERFORMANCE_DAILY_REPORT[CALENDAR_DATE])
+			
+			-- 1. Determine custom fiscal year start (Dec 26th)
+			VAR FiscalYearStart = 
+			    IF(
+			        MONTH(CurrentDate) = 12 && DAY(CurrentDate) >= 26,
+			        DATE(YEAR(CurrentDate), 12, 26),
+			        DATE(YEAR(CurrentDate) - 1, 12, 26)
+			    )
+			
+			RETURN
+			    CALCULATE(
+			        -- 2. Calculates the average of the daily capacity factor across the year
+			        AVERAGEX(
+			            VALUES('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			            [DAY_CAPACITY_FACTOR]
+			        ),
+			        -- 3. Bypass the page-level "is_today_minus_2" filter
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[is_today_minus_2]),
+			        -- 4. Clear any other date slicers to apply the YTD range
+			        REMOVEFILTERS('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE]),
+			        -- 5. Apply the Fiscal Year-to-Date range (Dec 26 to CurrentDate)
+			        DATESBETWEEN(
+			            'ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE], 
+			            FiscalYearStart, 
+			            CurrentDate
+			        )
+			    )
+			```
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 26f05a55-3cfe-4ec1-99af-c9552acf1b99
+
+	measure 'Show Current Billing Cycle' = ```
+			
+			VAR SelectedBilling =
+			    CALCULATE(
+			        SELECTEDVALUE('PEAKING_PLANTS_PROFILES'[BILLING_DATE]),
+			        ALL('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE])
+			    )
+			VAR AxisDate    = MAX('ASSET_PERFORMANCE_DAILY_REPORT'[CALENDAR_DATE])
+			RETURN
+			IF(
+			    NOT ISBLANK(SelectedBilling) &&
+			    AxisDate >= SelectedBilling &&
+			    AxisDate <  EDATE(SelectedBilling, 1),
+			    1,
+			    0
+			)
+			
+			
+			```
+		formatString: 0
+		lineageTag: 35b14bdb-98b8-4ad3-a75e-f697a9d83bed
+
+	measure 'Show Entire Selected Billing Cycle' =
+			
+			VAR SelectedBilling =
+			    CALCULATE(
+			        SELECTEDVALUE('PEAKING_PLANTS_PROFILES'[BILLING_DATE]),
+			        ALL('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE])
+			    )
+			VAR AxisDate    = MAX('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE])
+			RETURN
+			IF(
+			    NOT ISBLANK(SelectedBilling) &&
+			    AxisDate >= SelectedBilling &&
+			    AxisDate <  EDATE(SelectedBilling, 1),
+			    1,
+			    0
+			)
+		formatString: 0
+		lineageTag: 1efb439f-c9d2-4098-a167-30fbfb7fd58f
+
+	measure '// Shows only the days from the billing start (26th) up to the *selected* calendar dateShow Days (26..Selected)' =
+			
+			VAR SelDate = SELECTEDVALUE('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE])
+			VAR HasSel  = NOT ISBLANK(SelDate)
+			
+			VAR StartDate =
+			    IF(
+			        DAY(SelDate) >= 26,
+			        DATE(YEAR(SelDate), MONTH(SelDate), 26),
+			        DATE(YEAR(EOMONTH(SelDate, -1)), MONTH(EOMONTH(SelDate, -1)), 26)
+			    )
+			
+			VAR AxisDate = SELECTEDVALUE('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE])
+			
+			RETURN
+			IF(
+			    HasSel
+			        && NOT ISBLANK(AxisDate)
+			        && AxisDate >= StartDate
+			        && AxisDate <= SelDate,       // <- Limits to 26..selected day only
+			    1, 0
+			)
+		formatString: 0
+		lineageTag: 55dda713-e778-4948-8239-c789fdfb1a5d
+
+	measure MaxFiscalCycleSerial = ```
+			
+			VALUE(
+			    FORMAT(
+			        CALCULATE(
+			            MAX('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE]),
+			            FILTER(
+			                ALL('PEAKING_PLANTS_PROFILES'),
+			                'PEAKING_PLANTS_PROFILES'[FiscalCycleStart] = SELECTEDVALUE('PEAKING_PLANTS_PROFILES'[FiscalCycleStart])
+			            )
+			        ),
+			        "YYYYMMDD"
+			    )
+			)
+			
+			```
+		lineageTag: dd45a490-369b-486b-8f77-8b6428b6d0d7
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure MinFiscalCycleSerial =
+			
+			VALUE(
+			    FORMAT(
+			        CALCULATE(
+			            MIN('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE]),
+			            FILTER(
+			                ALL('PEAKING_PLANTS_PROFILES'),
+			                'PEAKING_PLANTS_PROFILES'[FiscalCycleStart] = SELECTEDVALUE('PEAKING_PLANTS_PROFILES'[FiscalCycleStart])
+			            )
+			        ),
+			        "YYYYMMDD"
+			    )
+			)
+		lineageTag: 4e9400c8-2fda-40e7-971d-fe09d75b8083
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	measure 'Axis Min Date (Prev 26th)' = ```
+			
+			VAR TodayDate = TODAY()
+			VAR PrevMonthStart = DATE( YEAR(TodayDate), MONTH(TodayDate) - 1, 26 )
+			RETURN PrevMonthStart
+			
+			
+			```
+		formatString: General Date
+		lineageTag: c06d906c-13b9-4fe4-b698-a3aa4e6452df
+
+	column BILLING_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 21c8f3cb-08dc-4ccb-8411-2a4c9db93d86
+		summarizeBy: none
+		sourceColumn: BILLING_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column CALENDAR_DATE
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 0bd9e599-8d33-40f2-9bc8-a676e6d2364c
+		summarizeBy: none
+		sourceColumn: CALENDAR_DATE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column TIME_INTERVAL
+		dataType: dateTime
+		formatString: General Date
+		lineageTag: ae935233-242a-4863-936e-e9653d87f324
+		summarizeBy: none
+		sourceColumn: TIME_INTERVAL
+
+		annotation SummarizationSetBy = Automatic
+
+	column RESOURCE_NAME
+		dataType: string
+		lineageTag: ea587837-3130-4d39-80ca-4830e23d45bc
+		summarizeBy: none
+		sourceColumn: RESOURCE_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column PLANT_NAME
+		dataType: string
+		lineageTag: a326b856-404e-46d0-b44c-45c0872e2ed6
+		summarizeBy: none
+		sourceColumn: PLANT_NAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column RTD_MW
+		dataType: double
+		lineageTag: 0bfdf255-ab1b-498b-8ca7-1b63fc2a8d4a
+		summarizeBy: sum
+		sourceColumn: RTD_MW
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column EXPORT_MWH
+		dataType: double
+		lineageTag: c4db0ed9-c959-4777-9a84-ea30a8475614
+		summarizeBy: sum
+		sourceColumn: EXPORT_MWH
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ENERGY_PRICE
+		dataType: double
+		lineageTag: 6343f30c-b48a-44b3-b99b-588777ed1d9c
+		summarizeBy: sum
+		sourceColumn: ENERGY_PRICE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column WESM_GTA
+		dataType: double
+		lineageTag: 5a806bf0-979c-4f22-bec7-c6a0cd0603ff
+		summarizeBy: sum
+		sourceColumn: WESM_GTA
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RESERVE_CATEGORY
+		dataType: string
+		lineageTag: 0dcd2ebe-f7b6-43a0-8afc-8662e9b5b465
+		summarizeBy: none
+		sourceColumn: RESERVE_CATEGORY
+
+		annotation SummarizationSetBy = Automatic
+
+	column ASPA_SCHED
+		dataType: double
+		lineageTag: f9ceea99-9948-4177-8a29-16806bf170b5
+		summarizeBy: sum
+		sourceColumn: ASPA_SCHED
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ASPA_PRICE
+		dataType: double
+		lineageTag: 32a25b9b-95e0-4380-ba21-82f72e003de3
+		summarizeBy: sum
+		sourceColumn: ASPA_PRICE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ASPA_REV
+		dataType: double
+		lineageTag: 0a912a60-8179-4ee3-9752-a49f06bf0af0
+		summarizeBy: sum
+		sourceColumn: ASPA_REV
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RM_SCHED
+		dataType: double
+		lineageTag: ff22f1f1-1927-440b-a06f-5ee46df89842
+		summarizeBy: sum
+		sourceColumn: RM_SCHED
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RM_PRICE
+		dataType: double
+		lineageTag: ee6fea80-2d32-4a74-b78a-0927c7d5a7e9
+		summarizeBy: sum
+		sourceColumn: RM_PRICE
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RM_REV
+		dataType: double
+		lineageTag: cee7f1a8-1da2-4a64-b8d1-44afcf5a00e2
+		summarizeBy: sum
+		sourceColumn: RM_REV
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column ASPA_DISPATCH
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 3a592353-fcd5-4462-80e2-e32e816befb2
+		summarizeBy: sum
+		sourceColumn: ASPA_DISPATCH
+
+		annotation SummarizationSetBy = Automatic
+
+	column WESM_DISPATCH
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 63c5f445-bc79-4d8a-99c4-cccb43fc9e37
+		summarizeBy: sum
+		sourceColumn: WESM_DISPATCH
+
+		annotation SummarizationSetBy = Automatic
+
+	column RM_DISPATCH
+		dataType: double
+		formatString: 0.00
+		lineageTag: 825fe9d5-c543-4407-ba8d-9ef92d521963
+		summarizeBy: sum
+		sourceColumn: RM_DISPATCH
+
+		annotation SummarizationSetBy = Automatic
+
+	column WESM_REV
+		dataType: double
+		lineageTag: a468aef0-f160-4131-8ba8-6a189389ea7f
+		summarizeBy: sum
+		sourceColumn: WESM_REV
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column RM_DISPATCH_REV
+		dataType: double
+		lineageTag: b4575a3f-bd99-4a3c-81bc-da6a45b83b4d
+		summarizeBy: sum
+		sourceColumn: RM_DISPATCH_REV
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column AVAILABLE_CAPACITY
+		dataType: double
+		lineageTag: 9b4db805-28ed-45a3-b4b8-8983ca57781c
+		summarizeBy: sum
+		sourceColumn: AVAILABLE_CAPACITY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column REGISTERED_CAPACITY
+		dataType: double
+		lineageTag: 9b224dac-7131-4b4a-9039-2b3c001b1c57
+		summarizeBy: sum
+		sourceColumn: REGISTERED_CAPACITY
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column OUTAGE_CAPACITY
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 80d90420-d8a1-47fb-a1d0-c831f0855717
+		summarizeBy: sum
+		sourceColumn: OUTAGE_CAPACITY
+
+		annotation SummarizationSetBy = Automatic
+
+	column STANDBY_CAPACITY
+		dataType: double
+		formatString: #,0.00
+		lineageTag: b39610ef-5f2e-45c3-8b75-a52fafd563af
+		summarizeBy: sum
+		sourceColumn: STANDBY_CAPACITY
+
+		annotation SummarizationSetBy = Automatic
+
+	column Hour =
+			
+			VAR h = HOUR('PEAKING_PLANTS_PROFILES'[TIME_INTERVAL])
+			RETURN h & "H"
+		lineageTag: 2235566f-20ec-42c8-80a3-56c29a6c9be9
+		summarizeBy: none
+		sortByColumn: HourNumeric
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column INITIAL_DAY =
+			
+			FORMAT('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE], "dd")
+		lineageTag: 14a7aee4-f32c-4f0e-a657-b17c64f57ac4
+		summarizeBy: none
+		sortByColumn: PEAKING_DAY_SORT_ORDER
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column INITIAL_MONTH =
+			
+			FORMAT('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE], "MMM")
+		lineageTag: e635614f-9bbe-4574-b0c3-12b74978e263
+		summarizeBy: none
+		sortByColumn: MonthNumber
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column HourNumeric = HOUR('PEAKING_PLANTS_PROFILES'[TIME_INTERVAL])
+		formatString: 0
+		lineageTag: 34de3c6c-9031-4e97-9137-94f42910b773
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column MonthNumber = MONTH('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE])
+		formatString: 0
+		lineageTag: c1c59637-976f-4bcc-a485-9881739a07ac
+		summarizeBy: sum
+
+		annotation SummarizationSetBy = Automatic
+
+	column ASPA_SCHED_WO_DISPATCH
+		dataType: double
+		formatString: #,0.00
+		lineageTag: 166294cf-bed9-4a5d-ab3e-3b31f8e5cf02
+		summarizeBy: sum
+		sourceColumn: ASPA_SCHED_WO_DISPATCH
+
+		annotation SummarizationSetBy = Automatic
+
+	column RM_SCHED_WO_DISPATCH
+		dataType: double
+		formatString: #,0.00
+		lineageTag: f8383b42-4182-43d5-9742-0b1383b6c014
+		summarizeBy: sum
+		sourceColumn: RM_SCHED_WO_DISPATCH
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Axis Day Label' = FORMAT('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE], "dd")
+		lineageTag: 8cc307b0-530e-4d76-bd50-816a86cbb6f3
+		summarizeBy: none
+		sortByColumn: FiscalCycleStart
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column FiscalCycleStart =
+			
+			VAR d = 'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE]
+			RETURN
+			DATE(
+			    YEAR(d) - IF(DAY(d) <= 25 && MONTH(d) = 1, 1, 0),
+			    MONTH(d) - IF(DAY(d) <= 25, 1, 0),
+			    26
+			)
+		formatString: General Date
+		lineageTag: 5222aec3-f191-4978-b5d1-77cdf0326a87
+		summarizeBy: none
+
+		annotation SummarizationSetBy = Automatic
+
+	column ShowPeakingRange = ```
+			
+			VAR CurrentDate = TODAY()
+			VAR StartDate = DATE(YEAR(CurrentDate), MONTH(CurrentDate), 26)
+			VAR EndDate = DATE(YEAR(CurrentDate), MONTH(CurrentDate) + 1, 25)
+			RETURN
+			IF(
+			    'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] >= StartDate &&
+			    'PEAKING_PLANTS_PROFILES'[CALENDAR_DATE] <= EndDate,
+			    1,
+			    0
+			)
+			
+			```
+		formatString: 0
+		lineageTag: b5700697-fca6-489c-8b46-468ee8d90f69
+		summarizeBy: sum
+		sortByColumn: BILLING_DATE
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column PEAKING_DAY_SORT_ORDER =
+			
+			VAR CurrentDay = DAY('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE])
+			RETURN
+			    IF(
+			        CurrentDay >= 26,
+			        CurrentDay - 25,
+			        DAY(EOMONTH('PEAKING_PLANTS_PROFILES'[CALENDAR_DATE], -1)) - 25 + CurrentDay
+			    )
+		formatString: 0
+		lineageTag: 3db1d1dc-85c2-4f6a-b727-57d8ed35175b
+		summarizeBy: none
+
+		annotation SummarizationSetBy = User
+
+	hierarchy 'CALENDAR_DATE Hierarchy'
+		lineageTag: 8989e1fb-0f17-450d-a03c-fefd26b71600
+
+		level CALENDAR_DATE
+			lineageTag: fc9e6516-5862-40a7-b527-3eb0e4bf92cb
+			column: CALENDAR_DATE
+
+	partition PEAKING_PLANTS_PROFILES = m
+		mode: import
+		source =
+				let
+				    Source = Value.NativeQuery(Snowflake.Databases("ayala-acen.snowflakecomputing.com","ACEN_XS_WH",[Implementation="2.0"]){[Name="ACEN_OPS"]}[Data], "SELECT * FROM ACEN_OPS_PLAYGROUND.LIMUIL.PEAKING_PLANTS_PROFILE_V4view", null, [EnableFolding=true]),
+				    #"Filtered Rows" = Table.SelectRows(Source, each [CALENDAR_DATE] > #date(2024, 12, 24))
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Exception
+
