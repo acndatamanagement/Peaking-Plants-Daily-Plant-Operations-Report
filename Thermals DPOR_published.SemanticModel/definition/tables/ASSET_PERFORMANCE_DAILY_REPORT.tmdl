@@ -123,6 +123,9 @@ table ASSET_PERFORMANCE_DAILY_REPORT
 	measure Test = "This is for demo measure"
 		lineageTag: be3d83ec-6ad5-462c-93b0-9b9aaae2f0a9
 
+	measure MEASURE = "TEST"
+		lineageTag: a6ce9ee6-b73b-476c-be51-25b5bb5a36ba
+
 	column BILLING_DATE
 		dataType: dateTime
 		formatString: Long Date
